@@ -1,0 +1,286 @@
+direction: down
+vars: {
+  d2-config: {
+    layout-engine: dagre
+    theme-id: 200
+  }
+}
+
+# --- STYLING ---
+classes: {
+  person: {
+    shape: rectangle
+    style: {
+      fill: "#E8F4F8"
+      stroke: "#1168bd"
+      stroke-width: 2
+      font-color: "#1168bd"
+      border-radius: 5
+      font-size: 14
+      bold: true
+    }
+  }
+  api_layer: {
+    style: {
+      fill: "#1168bd"
+      stroke: "#0b4d8c"
+      font-color: white
+      border-radius: 8
+      font-size: 14
+      bold: true
+    }
+  }
+  module: {
+    shape: rectangle
+    style: {
+      fill: "#3d8fc7"
+      stroke: "#2a6a9e"
+      font-color: white
+      border-radius: 6
+      font-size: 13
+    }
+  }
+  datastore: {
+    shape: cylinder
+    style: {
+      fill: "#5a5a5a"
+      stroke: "#404040"
+      font-color: white
+    }
+  }
+  external: {
+    style: {
+      fill: "#999999"
+      stroke: "#7a7a7a"
+      font-color: white
+      border-radius: 6
+    }
+  }
+  ai_service: {
+    style: {
+      fill: "#0b7a9e"
+      stroke: "#085f7a"
+      font-color: white
+      border-radius: 6
+    }
+  }
+}
+
+# --- ACTORS ---
+customer: Customer {
+  class: person
+  label: "[Customer]\nWeb/Mobile Client"
+}
+
+admin: Admin {
+  class: person
+  label: "[Admin]\nAdmin Dashboard"
+}
+
+# --- API LAYER ---
+api: API Gateway / Router {
+  class: api_layer
+  label: "[Express.js Router]\nREST API + SSE endpoints\nAuthentication middleware"
+  tooltip: "Entry point for all HTTP requests"
+}
+
+# --- ECOMMERCE BACKEND MODULES ---
+backend: Ecommerce Backend (Node.js Monolith) {
+  style: {
+    fill: "#e3f2fd"
+    stroke: "#1168bd"
+    stroke-width: 3
+    stroke-dash: 0
+  }
+
+  # Core Business Modules
+  catalog: Catalog Module {
+    class: module
+    label: "[Catalog Module]\nProduct catalog SSoT\nPricing, variants, metadata\nSearch & filtering"
+  }
+
+  orders: Order Module {
+    class: module
+    label: "[Order Module]\nOrder state machine\nOrder history\nRefunds & cancellations"
+  }
+
+  cart: Cart Module {
+    class: module
+    label: "[Cart Module]\nSession/persistent cart\nCart calculations\nPromo codes"
+  }
+
+  assets: Asset Module {
+    class: module
+    label: "[Asset Module]\nManage uploaded photos\nCartoonified results refs\nAsset metadata & tags"
+  }
+
+  # User & Auth
+  users: User Module {
+    class: module
+    label: "[User Module]\nUser profiles\nPreferences\nOrder history"
+  }
+
+  auth: Auth Module {
+    class: module
+    label: "[Auth Module]\nJWT handling\nSession management\nOAuth integration"
+  }
+
+  # Marketing & Growth
+  referrals: Referral Module {
+    class: module
+    label: "[Referral Module]\nReferral code generation\nReward tracking\nViral loop metrics"
+  }
+
+  ab_testing: A/B Testing Module {
+    class: module
+    label: "[A/B Testing Module]\nExperiment variants\nAI style testing\nConversion tracking"
+  }
+
+  # AI Job Management
+  jobs: Job Status Module {
+    class: module
+    label: "[Job Status Module]\nTrack AI job lifecycle\nPublish to Pub/Sub\nHandle job completion"
+  }
+
+  realtime: Real-time Module {
+    class: module
+    label: "[Real-time Module]\nSSE/WebSocket server\nPush job updates to clients\nConnection management"
+  }
+
+  # Integration Layer
+  printify_adapter: Printify Adapter {
+    class: module
+    label: "[Printify Adapter]\nProduct mapping table\nOrder creation/sync\nWebhook handler"
+  }
+
+  analytics: Analytics Module {
+    class: module
+    label: "[Analytics Module]\nEvent tracking\nTikTok + GA4 integration\nFunnel metrics"
+  }
+
+  # Data Layer
+  database: PostgreSQL Database {
+    class: datastore
+    label: "[PostgreSQL]\nProducts, Orders, Users\nJobs, Assets, Referrals\nMappings, Experiments"
+  }
+
+  cache: Redis Cache {
+    class: datastore
+    label: "[Redis]\nSession store\nCart cache\nJob status cache"
+  }
+}
+
+# --- EXTERNAL SYSTEMS ---
+ai_service: AI Cartoonification Service {
+  class: ai_service
+  label: "[AI Service]\nSeparate Node.js service"
+}
+
+pubsub: Google Pub/Sub {
+  class: external
+  label: "[Pub/Sub]\nJob queue"
+}
+
+storage: Cloud Storage {
+  class: external
+  label: "[GCS]\nMedia storage"
+}
+
+printify: Printify API {
+  class: external
+  label: "[Printify]\nFulfillment"
+}
+
+stripe: Stripe API {
+  class: external
+  label: "[Stripe]\nPayments"
+}
+
+oauth: Google OAuth {
+  class: external
+  label: "[OAuth]\nAuth"
+}
+
+tiktok: TikTok API {
+  class: external
+  label: "[TikTok]\nConversions"
+}
+
+ga4: Google Analytics 4 {
+  class: external
+  label: "[GA4]\nAnalytics"
+}
+
+email: Mailchimp/Klaviyo {
+  class: external
+  label: "[Email]\nMarketing"
+}
+
+# --- CLIENT TO API ---
+customer -> api: HTTPS requests
+admin -> api: HTTPS requests
+
+# --- API TO MODULES ---
+api -> backend.catalog: Product queries
+api -> backend.cart: Cart operations
+api -> backend.orders: Order management
+api -> backend.assets: Upload/retrieve assets
+api -> backend.users: User operations
+api -> backend.referrals: Referral operations
+api -> backend.jobs: Submit/check jobs
+api -> backend.realtime: SSE connections
+
+# --- AUTH FLOW ---
+api -> backend.auth: Validate token
+backend.auth -> backend.users: Get user
+backend.auth -> oauth: OAuth login
+
+# --- CATALOG & MAPPING ---
+backend.catalog -> backend.printify_adapter: Get Printify mapping
+backend.printify_adapter -> backend.database: Read mapping table
+backend.printify_adapter -> printify: Sync product specs
+
+# --- ASSET MANAGEMENT ---
+backend.assets -> backend.database: Store metadata
+backend.assets -> storage: Upload/retrieve files
+
+# --- AI JOB WORKFLOW ---
+backend.jobs -> backend.database: Store job record
+backend.jobs -> backend.cache: Cache job status
+backend.jobs -> pubsub: Publish job
+pubsub -> ai_service: Deliver job
+ai_service -> backend.jobs: Update job status (webhook)
+backend.jobs -> backend.realtime: Notify client
+backend.realtime -> customer: SSE push update
+
+# --- ORDER FLOW ---
+backend.cart -> backend.orders: Checkout
+backend.orders -> backend.database: Store order
+backend.orders -> backend.printify_adapter: Create fulfillment order
+backend.printify_adapter -> printify: Submit order
+printify -> backend.printify_adapter: Webhook updates
+backend.orders -> stripe: Process payment
+backend.orders -> backend.analytics: Track conversion
+
+# --- REFERRAL FLOW ---
+backend.referrals -> backend.database: Store referral data
+backend.referrals -> backend.users: Credit referrer
+backend.referrals -> backend.analytics: Track viral metrics
+
+# --- A/B TESTING ---
+backend.ab_testing -> backend.database: Experiment configs
+backend.ab_testing -> backend.jobs: Assign AI style variant
+backend.ab_testing -> backend.analytics: Track experiment results
+
+# --- ANALYTICS & MARKETING ---
+backend.analytics -> tiktok: Send conversion events
+backend.analytics -> ga4: Send user events
+backend.orders -> email: Transactional emails
+backend.referrals -> email: Referral emails
+
+# --- DATA ACCESS ---
+backend.catalog -> backend.database: Read products
+backend.orders -> backend.database: Read/write orders
+backend.users -> backend.database: Read/write users
+backend.cart -> backend.cache: Cart sessions
+backend.auth -> backend.cache: Session tokens

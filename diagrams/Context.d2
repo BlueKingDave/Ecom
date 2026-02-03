@@ -28,6 +28,14 @@ classes: {
       border-radius: 10
     }
   }
+  internal_ai_service: {
+    style: {
+      fill: "#0b7a9e"
+      stroke: "#085f7a"
+      font-color: white
+      border-radius: 10
+    }
+  }
   external_system: {
     style: {
       fill: "#999999"
@@ -36,49 +44,178 @@ classes: {
       border-radius: 10
     }
   }
+  infrastructure: {
+    style: {
+      fill: "#666666"
+      stroke: "#555555"
+      font-color: white
+      border-radius: 5
+    }
+  }
 }
 
 # --- ACTORS ---
 customer: Customer {
   class: person
-  label: "[Customer]\nBrowse, buy, try-on, customize"
+  label: "[Customer]\nUpload photo, preview cartoonified products, purchase"
 }
 
 admin: Store Admin {
   class: person
-  label: "[Store Admin]\nManage catalog, orders, content"
+  label: "[Store Admin]\nManage catalog, orders, AI configs, referrals"
 }
 
-# --- THE SYSTEM ---
-system: AI-Enhanced Ecommerce System {
+# --- INTERNAL SYSTEMS ---
+backend: Ecommerce Backend {
   class: internal_system
-  label: "[AI-Enhanced Ecommerce System]\nSells products online.\nAI Try-on & Generation"
+  label: "[Ecommerce Backend - Node.js Monolith]\nCatalog SSoT | Orders | Cart | Assets\nUser Auth | Referrals | Real-time Updates (SSE/WebSocket)"
+  tooltip: "Modules: Catalog, Orders, Cart, Assets, Users, Referrals, A/B Testing"
 }
 
-# --- EXTERNAL SERVICES (Grouped for neatness) ---
-cloud_services: External Services {
+ai_service: AI Cartoonification Service {
+  class: internal_ai_service
+  label: "[AI Cartoonification Service]\nJob processing | Multi-variant generation\nPreprocessing | Style A/B testing"
+  tooltip: "Consumes jobs from Pub/Sub, generates cartoonified variants"
+}
+
+# --- GOOGLE CLOUD PLATFORM ---
+gcp: Google Cloud Platform {
   style: {
     stroke-dash: 5
     fill: "#f8f9fa"
   }
-  
-  payment: Payment Provider { class: external_system; tooltip: "Stripe" }
-  shipping: Logistics/Tax { class: external_system; tooltip: "Shippo/UPS" }
-  email: Notifications { class: external_system; tooltip: "SendGrid/Twilio" }
-  idp: Auth Provider { class: external_system; tooltip: "Google/OAuth" }
-  ai: AI Runtime { class: external_system; tooltip: "Gemini/Replicate" }
-  storage: CDN/Storage { class: external_system; tooltip: "GCS/Cloudinary" }
+
+  pubsub: Pub/Sub {
+    class: infrastructure
+    tooltip: "Job queue for async AI processing"
+  }
+
+  storage: Cloud Storage {
+    class: infrastructure
+    tooltip: "Uploaded photos + cartoonified results + product assets"
+  }
+
+  hosting: Cloud Run / GCE {
+    class: infrastructure
+    tooltip: "Hosts backend + AI service"
+  }
 }
 
-# --- RELATIONSHIPS ---
-customer -> system: Uses {
-  style: { stroke-width: 2 }
-}
-admin -> system: Administers
+# --- EXTERNAL SERVICES ---
+external: External Services {
+  style: {
+    stroke-dash: 5
+    fill: "#f8f9fa"
+  }
 
-system -> cloud_services.payment: Authorize
-system -> cloud_services.shipping: Rates/Tax
-system -> cloud_services.email: Notify
-system -> cloud_services.idp: Authenticate
-system -> cloud_services.ai: Generate/Try-on
-system -> cloud_services.storage: Persist Media
+  printify: Printify {
+    class: external_system
+    tooltip: "Fulfillment SSoT: product specs, printing, shipping"
+  }
+
+  stripe: Stripe {
+    class: external_system
+    tooltip: "Payment processing"
+  }
+
+  ai_runtime: AI Runtime {
+    class: external_system
+    tooltip: "Gemini / Replicate - ML inference"
+  }
+
+  auth: Google OAuth {
+    class: external_system
+    tooltip: "User authentication"
+  }
+}
+
+# --- MARKETING & ANALYTICS ---
+marketing: Marketing & Analytics {
+  style: {
+    stroke-dash: 5
+    fill: "#fff3e0"
+  }
+
+  tiktok: TikTok Conversions API {
+    class: external_system
+    tooltip: "Server-side event tracking, attribution"
+  }
+
+  ga4: Google Analytics 4 {
+    class: external_system
+    tooltip: "User behavior analytics, funnel tracking"
+  }
+
+  email: Mailchimp / Klaviyo {
+    class: external_system
+    tooltip: "Email campaigns, transactional emails, automations"
+  }
+}
+
+# --- USER INTERACTIONS ---
+customer -> backend: Upload photo, customize product, checkout {
+  style: { stroke-width: 2; stroke: "#1168bd" }
+}
+admin -> backend: Manage catalog, orders, AI presets
+
+# --- CORE ASYNC AI WORKFLOW ---
+backend -> gcp.pubsub: Publish cartoonification job {
+  label: "{ asset_id, style, crop }"
+  style: { stroke: "#0b7a9e" }
+}
+
+gcp.pubsub -> ai_service: Consume job {
+  style: { stroke: "#0b7a9e" }
+}
+
+ai_service -> external.ai_runtime: Run inference {
+  label: "Generate variants"
+}
+
+ai_service -> gcp.storage: Store cartoonified results {
+  label: "4 style variants"
+}
+
+ai_service -> backend: Update job status {
+  label: "job_id: succeeded + asset refs"
+  style: { stroke: "#0b7a9e" }
+}
+
+# --- STORAGE ---
+backend -> gcp.storage: Store user uploads + product assets
+
+# --- FULFILLMENT FLOW ---
+backend -> external.printify: Create print order {
+  label: "via product mapping table"
+  style: { stroke: "#ff6b6b" }
+}
+
+external.printify -> backend: Webhook: order status updates {
+  style: { stroke-dash: 3 }
+}
+
+# --- PAYMENTS ---
+backend -> external.stripe: Process payment, refunds
+
+# --- AUTH ---
+backend -> external.auth: Authenticate users
+
+# --- MARKETING & ANALYTICS TRACKING ---
+backend -> marketing.tiktok: Conversion events {
+  label: "Upload, Cartoonify, AddToCart, Purchase"
+}
+
+backend -> marketing.ga4: User events, funnel tracking
+
+backend -> marketing.email: Transactional emails, campaigns {
+  label: "Order confirmations, cart abandonment, referrals"
+}
+
+# --- HOSTING (Implied) ---
+gcp.hosting -> backend: Hosts {
+  style: { opacity: 0.3; stroke-dash: 5 }
+}
+
+gcp.hosting -> ai_service: Hosts {
+  style: { opacity: 0.3; stroke-dash: 5 }
+}

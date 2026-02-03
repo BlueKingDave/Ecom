@@ -1,0 +1,221 @@
+direction: right
+vars: {
+  d2-config: {
+    layout-engine: dagre
+    theme-id: 200
+  }
+}
+
+# --- STYLING ---
+classes: {
+  module: {
+    shape: rectangle
+    style: {
+      fill: "#0b7a9e"
+      stroke: "#085f7a"
+      font-color: white
+      border-radius: 6
+      font-size: 13
+    }
+  }
+  worker: {
+    shape: rectangle
+    style: {
+      fill: "#1a9ec9"
+      stroke: "#0e7a9e"
+      font-color: white
+      border-radius: 6
+      font-size: 13
+    }
+  }
+  datastore: {
+    shape: cylinder
+    style: {
+      fill: "#5a5a5a"
+      stroke: "#404040"
+      font-color: white
+    }
+  }
+  external: {
+    style: {
+      fill: "#999999"
+      stroke: "#7a7a7a"
+      font-color: white
+      border-radius: 6
+    }
+  }
+}
+
+# --- AI CARTOONIFICATION SERVICE ---
+ai_service: AI Cartoonification Service {
+  style: {
+    fill: "#d4ebf2"
+    stroke: "#0b7a9e"
+    stroke-width: 3
+  }
+
+  # API Layer
+  api: Webhook API {
+    class: module
+    label: "[Express.js API]\nJob completion callback\nHealth checks\nMetrics endpoint"
+  }
+
+  # Job Processing
+  consumer: Job Consumer {
+    class: worker
+    label: "[Pub/Sub Consumer]\nPull jobs from queue\nAck/Nack handling\nRetry logic (exponential backoff)"
+    tooltip: "Scalable worker pool"
+  }
+
+  orchestrator: Processing Orchestrator {
+    class: module
+    label: "[Orchestrator]\nJob lifecycle management\nPipeline coordination\nError handling & retries"
+  }
+
+  # Processing Pipeline
+  preprocessor: Preprocessor {
+    class: module
+    label: "[Preprocessor]\nFace detection\nBackground removal\nImage validation & resizing\nCrop/alignment"
+  }
+
+  inference: Inference Engine {
+    class: module
+    label: "[Inference Engine]\nAI model invocation\nBatch processing\nTimeout handling\nModel version routing"
+  }
+
+  postprocessor: Postprocessor {
+    class: module
+    label: "[Postprocessor]\nGenerate 4 style variants\nWatermarking (optional)\nCompression & optimization\nThumbnail generation"
+  }
+
+  # Storage & Metadata
+  result_manager: Result Manager {
+    class: module
+    label: "[Result Manager]\nUpload to Cloud Storage\nGenerate signed URLs\nMetadata tagging\nCleanup old assets"
+  }
+
+  # Monitoring & Testing
+  ab_tracker: A/B Test Tracker {
+    class: module
+    label: "[A/B Tracker]\nAssign style variants\nLog experiment data\nPerformance metrics"
+  }
+
+  metrics: Metrics & Logging {
+    class: module
+    label: "[Metrics Module]\nProcessing times\nSuccess/failure rates\nModel performance\nCost tracking"
+  }
+
+  # Local Cache
+  cache: Redis Cache {
+    class: datastore
+    label: "[Redis]\nJob status cache\nModel config cache\nRate limiting"
+  }
+}
+
+# --- EXTERNAL SYSTEMS ---
+pubsub: Google Pub/Sub {
+  class: external
+  label: "[Pub/Sub]\nJob queue:\ncartoonify-jobs"
+}
+
+storage: Cloud Storage {
+  class: external
+  label: "[GCS]\nBuckets:\nuser-uploads/\ncartoonified-results/"
+}
+
+gemini: Gemini API {
+  class: external
+  label: "[Gemini]\nStyle: anime, pixar"
+}
+
+replicate: Replicate API {
+  class: external
+  label: "[Replicate]\nStyle: comic, sketch"
+  tooltip: "Fallback or specific models"
+}
+
+backend: Ecommerce Backend {
+  class: external
+  label: "[Backend API]\nJob status webhook"
+}
+
+monitoring: Cloud Monitoring {
+  class: external
+  label: "[GCP Monitoring]\nLogs, traces, alerts"
+}
+
+# --- JOB FLOW (Top to Bottom) ---
+pubsub -> ai_service.consumer: Pull job {
+  label: "{ job_id, asset_id, style, crop }"
+  style: { stroke: "#0b7a9e"; stroke-width: 2 }
+}
+
+ai_service.consumer -> ai_service.orchestrator: Process job
+
+ai_service.orchestrator -> ai_service.cache: Check/update status
+
+# --- PREPROCESSING ---
+ai_service.orchestrator -> ai_service.preprocessor: Preprocess {
+  label: "1. Validate & prepare"
+}
+
+ai_service.preprocessor -> storage: Fetch original photo
+
+ai_service.preprocessor -> ai_service.orchestrator: Preprocessed image
+
+# --- INFERENCE ---
+ai_service.orchestrator -> ai_service.ab_tracker: Get style variant
+
+ai_service.ab_tracker -> ai_service.inference: Assigned style
+
+ai_service.inference -> gemini: Generate (anime/pixar) {
+  label: "2. Run inference"
+}
+
+ai_service.inference -> replicate: Generate (comic/sketch)
+
+gemini -> ai_service.inference: Cartoonified image
+replicate -> ai_service.inference: Cartoonified image
+
+ai_service.inference -> ai_service.orchestrator: AI results
+
+# --- POSTPROCESSING ---
+ai_service.orchestrator -> ai_service.postprocessor: Postprocess {
+  label: "3. Generate variants"
+}
+
+ai_service.postprocessor -> ai_service.result_manager: 4 style variants
+
+# --- STORAGE & COMPLETION ---
+ai_service.result_manager -> storage: Upload results {
+  label: "4. Store outputs"
+  style: { stroke: "#ff6b6b" }
+}
+
+ai_service.result_manager -> ai_service.orchestrator: Asset refs + URLs
+
+# --- CALLBACK ---
+ai_service.orchestrator -> ai_service.api: Job complete
+
+ai_service.api -> backend: Webhook: job status {
+  label: "{ job_id, status: 'succeeded', assets: [...] }"
+  style: { stroke: "#0b7a9e"; stroke-width: 2 }
+}
+
+# --- METRICS & MONITORING ---
+ai_service.orchestrator -> ai_service.metrics: Log events
+ai_service.inference -> ai_service.metrics: Processing time
+ai_service.ab_tracker -> ai_service.metrics: Experiment data
+
+ai_service.metrics -> monitoring: Push metrics & logs
+
+# --- ERROR HANDLING ---
+ai_service.orchestrator -> pubsub: Nack (on failure) {
+  label: "Retry with backoff"
+  style: { stroke-dash: 3 }
+}
+
+ai_service.api -> backend: Webhook: job failed {
+  label: "{ job_id, status: 'failed', error }"
+  style: { stroke: "#d32f2f"; stroke-dash: 3 }
+}
