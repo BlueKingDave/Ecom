@@ -1,0 +1,84 @@
+direction: right
+vars: {
+  d2-config: {
+    layout-engine: dagre
+    theme-id: 200
+  }
+}
+
+# --- STYLING ---
+classes: {
+  person: {
+    shape: rectangle
+    style: {
+      fill: "#E8F4F8"
+      stroke: "#1168bd"
+      stroke-width: 2
+      font-color: "#1168bd"
+      border-radius: 5
+      font-size: 16
+      bold: true
+    }
+  }
+  internal_system: {
+    style: {
+      fill: "#1168bd"
+      stroke: "#0b4d8c"
+      font-color: white
+      border-radius: 10
+    }
+  }
+  external_system: {
+    style: {
+      fill: "#999999"
+      stroke: "#8a8a8a"
+      font-color: white
+      border-radius: 10
+    }
+  }
+}
+
+# --- ACTORS ---
+customer: Customer {
+  class: person
+  label: "[Customer]\nBrowse, buy, try-on, customize"
+}
+
+admin: Store Admin {
+  class: person
+  label: "[Store Admin]\nManage catalog, orders, content"
+}
+
+# --- THE SYSTEM ---
+system: AI-Enhanced Ecommerce System {
+  class: internal_system
+  label: "[AI-Enhanced Ecommerce System]\nSells products online.\nAI Try-on & Generation"
+}
+
+# --- EXTERNAL SERVICES (Grouped for neatness) ---
+cloud_services: External Services {
+  style: {
+    stroke-dash: 5
+    fill: "#f8f9fa"
+  }
+  
+  payment: Payment Provider { class: external_system; tooltip: "Stripe" }
+  shipping: Logistics/Tax { class: external_system; tooltip: "Shippo/UPS" }
+  email: Notifications { class: external_system; tooltip: "SendGrid/Twilio" }
+  idp: Auth Provider { class: external_system; tooltip: "Google/OAuth" }
+  ai: AI Runtime { class: external_system; tooltip: "Gemini/Replicate" }
+  storage: CDN/Storage { class: external_system; tooltip: "GCS/Cloudinary" }
+}
+
+# --- RELATIONSHIPS ---
+customer -> system: Uses {
+  style: { stroke-width: 2 }
+}
+admin -> system: Administers
+
+system -> cloud_services.payment: Authorize
+system -> cloud_services.shipping: Rates/Tax
+system -> cloud_services.email: Notify
+system -> cloud_services.idp: Authenticate
+system -> cloud_services.ai: Generate/Try-on
+system -> cloud_services.storage: Persist Media
