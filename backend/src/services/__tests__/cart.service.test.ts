@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CartService, type CartItem } from '../cart.service';
 
-// Mock Redis
-vi.mock('redis', () => {
-  const mockData = new Map<string, { value: string; expiry: number }>();
+// Mock Redis with proper test isolation
+let mockData = new Map<string, { value: string; expiry: number }>();
 
+vi.mock('redis', () => {
   return {
     createClient: () => ({
       connect: vi.fn().mockResolvedValue(undefined),
@@ -29,9 +29,6 @@ vi.mock('redis', () => {
         return Promise.resolve(1);
       }),
       disconnect: vi.fn().mockResolvedValue(undefined),
-      // Helper for tests
-      _clear: () => mockData.clear(),
-      _getData: () => mockData,
     }),
   };
 });
@@ -41,8 +38,9 @@ describe('CartService: Operations', () => {
   const sessionId = 'test-session-123';
 
   beforeEach(() => {
+    // Clear mock Redis data before each test
+    mockData.clear();
     cartService = new CartService();
-    // Clear mock Redis data
     vi.clearAllMocks();
   });
 
