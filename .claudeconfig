@@ -1,0 +1,31 @@
+{
+  "agents": {
+    "coordinator": ".claude/agents/coordinator-agent.md",
+    "frontend": ".claude/agents/builders/frontend-ui.md",
+    "backend": ".claude/agents/builders/backend-api.md",
+    "database": ".claude/agents/builders/database.md",
+    "integration": ".claude/agents/builders/integration.md",
+    "docs": ".claude/agents/builders/docs.md",
+    "testing": ".claude/agents/testing-agent.md",
+    "reviewer": ".claude/agents/reviewer-agent.md"
+  },
+  
+  "hooks": {
+    "pre-task": "scripts/hooks/pre-task.sh",
+    "post-commit": "scripts/hooks/trigger-testing.sh",
+    "post-task": "scripts/hooks/update-state.py"
+  },
+  
+  "context": {
+    "shared": [
+      ".claude/shared/project-context.md",
+      ".claude/shared/coding-standards.md"
+    ]
+  },
+  
+  "settings": {
+    "auto_commit": false,
+    "branch_prefix": "feature/",
+    "log_directory": ".claude/state/agent-logs/"
+  }
+}
