@@ -1,0 +1,44 @@
+{
+  "id": "stripe-payment",
+  "name": "Stripe Payment",
+  "version": "1.0.0",
+  "type": "payment",
+  "main": "./dist/index.js",
+  "author": "Ecom Platform",
+  "description": "Process payments via Stripe with support for one-time payments, subscriptions, and webhooks",
+  "config": {
+    "secretKey": {
+      "type": "string",
+      "required": true,
+      "encrypted": true,
+      "description": "Stripe Secret Key (sk_test_... or sk_live_...)"
+    },
+    "publishableKey": {
+      "type": "string",
+      "required": true,
+      "description": "Stripe Publishable Key (pk_test_... or pk_live_...)"
+    },
+    "webhookSecret": {
+      "type": "string",
+      "required": false,
+      "encrypted": true,
+      "description": "Webhook signing secret for verifying Stripe events"
+    },
+    "currency": {
+      "type": "string",
+      "required": false,
+      "default": "usd",
+      "description": "Default currency code (ISO 4217)"
+    }
+  },
+  "events": {
+    "subscribes": ["order.created", "order.cancelled"],
+    "publishes": ["payment.succeeded", "payment.failed", "payment.refunded"]
+  },
+  "capabilities": [
+    "payment.create",
+    "payment.capture",
+    "payment.refund",
+    "payment.webhook"
+  ]
+}

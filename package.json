@@ -1,0 +1,26 @@
+{
+  "name": "ecom-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Modular multi-tenant ecommerce platform with pluggable fulfillment and ad platforms",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "type-check": "pnpm -r type-check",
+    "clean": "pnpm -r clean && rm -rf node_modules",
+    "db:migrate": "pnpm --filter @ecom/backend db:migrate",
+    "db:seed": "pnpm --filter @ecom/backend db:seed",
+    "db:studio": "pnpm --filter @ecom/backend db:studio"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "prettier": "^3.2.4",
+    "typescript": "^5.3.3"
+  }
+}

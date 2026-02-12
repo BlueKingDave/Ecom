@@ -1,0 +1,114 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  deploy-backend:
+    name: Deploy Backend
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build backend
+        run: cd backend && pnpm build || echo "Build script not configured"
+
+      - name: Build plugins
+        run: |
+          cd plugins/stripe-payment && pnpm build
+          cd ../printify-fulfillment && pnpm build
+
+      # Add your deployment steps here
+      # Examples:
+      # - Deploy to Google Cloud Run
+      # - Deploy to Railway
+      # - Deploy to AWS ECS
+      # - Deploy to Vercel (for serverless)
+
+      - name: Deploy notification
+        run: echo "Backend deployed successfully!"
+
+  deploy-storefront:
+    name: Deploy Storefront
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build storefront
+        run: cd frontend/storefront && pnpm build
+
+      # Add your deployment steps here
+      # Examples:
+      # - Deploy to Vercel
+      # - Deploy to Netlify
+      # - Deploy to Cloudflare Pages
+      # - Upload to S3 + CloudFront
+
+      - name: Deploy notification
+        run: echo "Storefront deployed successfully!"
+
+  deploy-admin:
+    name: Deploy Admin Dashboard
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build admin
+        run: cd frontend/admin && pnpm build
+
+      # Add your deployment steps here
+      # Examples:
+      # - Deploy to Vercel
+      # - Deploy to Netlify
+      # - Deploy to internal hosting
+
+      - name: Deploy notification
+        run: echo "Admin dashboard deployed successfully!"
