@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { hashPassword, verifyPassword } from '../../utils/password';
 import { encrypt, decrypt, isEncrypted } from '../../utils/crypto';
 import bcrypt from 'bcrypt';

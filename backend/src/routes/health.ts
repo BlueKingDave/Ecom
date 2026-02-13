@@ -1,5 +1,6 @@
 import { FastifyPluginAsync } from 'fastify';
 import { db } from '../db';
+import { storageService } from '../services/storage.service';
 
 export const healthRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.get(
@@ -34,30 +35,56 @@ export const healthRoutes: FastifyPluginAsync = async (fastify) => {
     {
       schema: {
         tags: ['health'],
-        description: 'Readiness check - verifies database connection',
+        description: 'Readiness check - verifies all services',
         response: {
           200: {
             type: 'object',
             properties: {
               status: { type: 'string' },
-              database: { type: 'string' },
+              services: {
+                type: 'object',
+                properties: {
+                  database: { type: 'string' },
+                  storage: { type: 'string' },
+                },
+              },
             },
           },
         },
       },
     },
     async (_request, reply) => {
+      const services: Record<string, string> = {};
+      let allHealthy = true;
+
+      // Check database
       try {
-        // Simple database check
         await db.execute(new String('SELECT 1') as any);
+        services.database = 'ok';
+      } catch (error) {
+        services.database = 'error';
+        allHealthy = false;
+      }
+
+      // Check GCS
+      try {
+        const storageHealthy = await storageService.healthCheck();
+        services.storage = storageHealthy ? 'ok' : 'error';
+        if (!storageHealthy) allHealthy = false;
+      } catch (error) {
+        services.storage = 'error';
+        allHealthy = false;
+      }
+
+      if (allHealthy) {
         return {
           status: 'ready',
-          database: 'connected',
+          services,
         };
-      } catch (error) {
+      } else {
         reply.status(503).send({
           status: 'not ready',
-          database: 'disconnected',
+          services,
         });
       }
     }

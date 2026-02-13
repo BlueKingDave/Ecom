@@ -30,7 +30,7 @@ describe('Product Routes', () => {
 
   describe('POST /api/products', () => {
     it('should require admin role', () => {
-      const user = { id: 'user-1', role: 'customer' as const };
+      const user = { id: 'user-1', role: 'customer' };
 
       const isAdmin = user.role === 'admin' || user.role === 'operator';
 

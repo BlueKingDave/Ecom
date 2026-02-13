@@ -51,7 +51,7 @@ describe('UserService: User Management', () => {
 
     it('should validate role values', () => {
       const validRoles = ['customer', 'admin', 'operator'];
-      const invalidRoles = ['super-admin', 'root', 'user', ''];
+      // const invalidRoles = ['super-admin', 'root', 'user', ''];
 
       const testRole = 'customer';
       expect(validRoles.includes(testRole)).toBe(true);

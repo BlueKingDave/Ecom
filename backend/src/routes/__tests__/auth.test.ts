@@ -102,7 +102,7 @@ describe('Auth Routes', () => {
     });
 
     it('should reject invalid token', () => {
-      const invalidToken = 'invalid.jwt.token';
+      // const invalidToken = 'invalid.jwt.token';
 
       // Simulate token validation
       const isValid = false; // Token validation would fail

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 
 describe('Cart Routes', () => {
-  const sessionId = 'session-123';
+  // const sessionId = 'session-123';
 
   describe('GET /api/cart', () => {
     it('should return cart for session', () => {

@@ -25,9 +25,9 @@ describe('Order Routes', () => {
     });
 
     it('should apply shipping charge for orders < $50', () => {
-      const items = [
-        { productId: 'prod-1', name: 'Product 1', price: '29.99', quantity: 1 },
-      ];
+      // const items = [
+      //   { productId: 'prod-1', name: 'Product 1', price: '29.99', quantity: 1 },
+      // ];
 
       const subtotal = 29.99;
       const expected = calculateOrderTotals(subtotal);
@@ -70,7 +70,7 @@ describe('Order Routes', () => {
   describe('GET /api/orders/:id', () => {
     it('should validate ownership for customers', () => {
       const order = { id: 'order-1', userId: 'user-1', tenantId };
-      const user = { id: 'user-2', role: 'customer' as const };
+      const user = { id: 'user-2', role: 'customer' };
 
       const canView = order.userId === user.id || user.role === 'admin';
 
@@ -81,7 +81,7 @@ describe('Order Routes', () => {
 
   describe('POST /api/orders/:id/cancel', () => {
     it('should allow order cancellation', () => {
-      const order = { id: 'order-1', status: 'pending' as const };
+      const order = { id: 'order-1', status: 'pending' };
 
       order.status = 'cancelled';
 

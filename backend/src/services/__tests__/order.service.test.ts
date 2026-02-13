@@ -1,13 +1,13 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { OrderService } from '../order.service';
+import { describe, it, expect, beforeEach } from 'vitest';
+// import { OrderService } from '../order.service';
 import { calculateOrderTotals } from '../../__tests__/setup';
 
 describe('OrderService: Calculation Tests', () => {
-  let orderService: OrderService;
-  const testTenantId = 'test-tenant-123';
+  // let orderService: OrderService;
+  // const testTenantId = 'test-tenant-123';
 
   beforeEach(() => {
-    orderService = new OrderService();
+    // orderService = new OrderService();
   });
 
   describe('Subtotal Calculation', () => {

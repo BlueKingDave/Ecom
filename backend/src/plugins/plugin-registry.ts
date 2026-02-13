@@ -6,7 +6,7 @@ export class PluginRegistry {
   private plugins: Map<string, { manifest: PluginManifest; instance?: BasePlugin }> = new Map();
   private pluginsPath: string;
 
-  constructor(pluginsPath: string = join(process.cwd(), '../../plugins')) {
+  constructor(pluginsPath: string = join(process.cwd(), '../plugins')) {
     this.pluginsPath = pluginsPath;
   }
 

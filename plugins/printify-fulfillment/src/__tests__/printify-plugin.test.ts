@@ -165,7 +165,7 @@ describe('PrintifyFulfillmentPlugin - RED Tests', () => {
         },
       });
 
-      expect(result[1].price).toBe(14.99); // 1499 cents to dollars
+      expect(result[1]?.price).toBe(14.99); // 1499 cents to dollars
 
       expect(mockFetch).toHaveBeenCalledWith(
         'https://api.printify.com/v1/shops/shop_123/products.json',
@@ -197,7 +197,7 @@ describe('PrintifyFulfillmentPlugin - RED Tests', () => {
 
       const result = await plugin.syncProducts();
 
-      expect(result[0].price).toBe(0); // No enabled variant
+      expect(result[0]?.price).toBe(0); // No enabled variant
     });
   });
 

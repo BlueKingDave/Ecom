@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { fixtures } from '../setup';
+import { describe, it, expect } from 'vitest';
+// import { fixtures } from '../setup';
 
 /**
  * Tenant Isolation Tests
@@ -86,7 +86,7 @@ describe('Tenant Isolation: Data Security', () => {
     });
 
     it('should prevent Tenant A from deleting Tenant B products', () => {
-      const tenantBProductId = 'prod-b1';
+      // const tenantBProductId = 'prod-b1';
       const tenantBProductTenantId = tenantB.id;
 
       // Simulate delete with tenant filter
@@ -218,7 +218,7 @@ describe('Tenant Isolation: Data Security', () => {
         tenantId: null, // Operators not bound to tenant
       };
 
-      const requestedTenantId = tenantA.id;
+      // const requestedTenantId = tenantA.id;
 
       // Operators can access any tenant
       const canAccess = user.role === 'operator';

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { hashPassword, verifyPassword } from '../../utils/password';
-import { encrypt, decrypt, isEncrypted } from '../../utils/crypto';
+import { encrypt, isEncrypted } from '../../utils/crypto';
 import { calculateOrderTotals } from '../setup';
 
 /**
@@ -188,7 +188,7 @@ describe('Smoke Tests: Platform Readiness', () => {
     });
 
     it('should deny cross-tenant access', () => {
-      const user = { id: 'user-1', tenantId: 'tenant-a', role: 'customer' as const };
+      const user = { id: 'user-1', tenantId: 'tenant-a', role: 'customer' };
       const resource = { id: 'resource-1', tenantId: 'tenant-b' };
 
       const canAccess =

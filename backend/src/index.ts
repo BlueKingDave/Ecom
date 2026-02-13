@@ -1,15 +1,18 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import jwt from '@fastify/jwt';
+import multipart from '@fastify/multipart';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import { tenantPlugin } from './plugins/tenant';
+import { authenticate } from './middleware/auth';
 import { authRoutes } from './routes/auth';
 import { healthRoutes } from './routes/health';
 import { productRoutes } from './routes/products';
 import { cartRoutes } from './routes/cart';
 import { orderRoutes } from './routes/orders';
 import { pluginRoutes } from './routes/plugins';
+import { assetRoutes } from './routes/assets';
 import { pluginRegistry } from './plugins/plugin-registry';
 import { db } from './db';
 import { tenants as tenantsTable } from './db/schema';
@@ -45,7 +48,7 @@ async function start() {
 
     // CORS with origin validation
     await app.register(cors, {
-      origin: async (origin, cb) => {
+      origin: (origin, cb) => {
         // Allow requests with no origin (e.g., mobile apps, Postman)
         if (!origin) {
           cb(null, true);
@@ -59,12 +62,16 @@ async function start() {
         }
 
         // In production, validate against tenant origins
-        const allowedOrigins = await getAllowedOrigins();
-        if (allowedOrigins.includes(origin)) {
-          cb(null, true);
-        } else {
-          cb(new Error('Not allowed by CORS'), false);
-        }
+        getAllowedOrigins().then((allowedOrigins) => {
+          if (allowedOrigins.includes(origin)) {
+            cb(null, true);
+          } else {
+            cb(new Error('Not allowed by CORS'), false);
+          }
+        }).catch((err) => {
+          console.error('Error validating CORS origin:', err);
+          cb(new Error('CORS validation error'), false);
+        });
       },
       credentials: true,
     });
@@ -76,6 +83,17 @@ async function start() {
         expiresIn: process.env.JWT_ACCESS_EXPIRES_IN || '15m',
       },
     });
+
+    // Multipart for file uploads
+    await app.register(multipart, {
+      limits: {
+        fileSize: 10 * 1024 * 1024, // 10MB max file size
+        files: 1, // Only allow 1 file per request
+      },
+    });
+
+    // Auth decorator
+    app.decorate('authenticate', authenticate);
 
     // Swagger/OpenAPI
     await app.register(swagger, {
@@ -97,6 +115,7 @@ async function start() {
           { name: 'products', description: 'Product management' },
           { name: 'orders', description: 'Order management' },
           { name: 'cart', description: 'Shopping cart' },
+          { name: 'assets', description: 'Asset management and file uploads' },
         ],
       },
     });
@@ -119,6 +138,7 @@ async function start() {
     await app.register(cartRoutes, { prefix: '/api/cart' });
     await app.register(orderRoutes, { prefix: '/api/orders' });
     await app.register(pluginRoutes, { prefix: '/api/plugins' });
+    await app.register(assetRoutes, { prefix: '/api/assets' });
 
     // Error handler
     app.setErrorHandler((error, request, reply) => {

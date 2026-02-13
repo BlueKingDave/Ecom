@@ -46,12 +46,12 @@ describe('PluginService: Plugin Management', () => {
     });
 
     it('should validate config against manifest', () => {
-      const manifest = {
-        config: {
-          secretKey: { required: true },
-          currency: { required: false, default: 'usd' },
-        },
-      };
+      // const manifest = {
+      //   config: {
+      //     secretKey: { required: true },
+      //     currency: { required: false, default: 'usd' },
+      //   },
+      // };
 
       const validConfig = {
         secretKey: 'sk_test_123',
@@ -163,9 +163,9 @@ describe('PluginService: Plugin Management', () => {
     });
 
     it('should return false if plugin not configured', () => {
-      const pluginConfig = null;
+      const pluginConfig: { enabled?: boolean } | null = null;
 
-      const isEnabled = pluginConfig?.enabled || false;
+      const isEnabled = (pluginConfig as { enabled?: boolean } | null)?.enabled || false;
 
       expect(isEnabled).toBe(false);
     });
