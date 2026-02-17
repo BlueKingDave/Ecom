@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Package, ShoppingCart, Store, Settings, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ThemeToggle } from '@ecom/ui';
 
 export function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -50,18 +51,23 @@ export function Layout() {
         )}
       >
         {/* Header with close button for mobile */}
-        <div className="flex items-center justify-between p-6 lg:block">
-          <div>
-            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-            <p className="text-sm text-muted-foreground">Ecom Platform</p>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-2">
+            <div>
+              <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+              <p className="text-sm text-muted-foreground">Ecom Platform</p>
+            </div>
+            <button
+              className="lg:hidden p-2 hover:bg-accent rounded-md transition-colors"
+              onClick={() => setSidebarOpen(false)}
+              aria-label="Close menu"
+            >
+              <X className="h-5 w-5" />
+            </button>
           </div>
-          <button
-            className="lg:hidden p-2 hover:bg-accent rounded-md transition-colors"
-            onClick={() => setSidebarOpen(false)}
-            aria-label="Close menu"
-          >
-            <X className="h-5 w-5" />
-          </button>
+          <div className="hidden lg:block mt-4">
+            <ThemeToggle />
+          </div>
         </div>
 
         <nav className="px-4 space-y-1">
@@ -98,7 +104,7 @@ export function Layout() {
               <Menu className="h-6 w-6" />
             </button>
             <h2 className="text-lg font-semibold">Admin Panel</h2>
-            <div className="w-10" /> {/* Spacer for centering */}
+            <ThemeToggle />
           </div>
         </header>
 

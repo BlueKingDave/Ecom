@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { ShoppingCart, Menu, X } from 'lucide-react';
-import { Button } from '@ecom/ui';
+import { Button, ThemeToggle } from '@ecom/ui';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 
@@ -55,6 +55,9 @@ export function Layout() {
                   <Menu className="h-6 w-6" />
                 )}
               </button>
+
+              {/* Theme Toggle */}
+              <ThemeToggle />
 
               {/* Cart Button */}
               <Link to="/cart">
