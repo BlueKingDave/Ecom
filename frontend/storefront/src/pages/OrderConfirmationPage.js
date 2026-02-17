@@ -2,8 +2,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useQuery } from '@tanstack/react-query';
 import { useParams, Link } from 'react-router-dom';
 import { api } from '@/lib/api';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@ecom/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@ecom/ui';
 import { formatPrice } from '@/lib/utils';
 import { CheckCircle2 } from 'lucide-react';
 export function OrderConfirmationPage() {

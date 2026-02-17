@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { ShoppingCart, Menu, X } from 'lucide-react';
-import { Button } from './ui/button';
+import { Button } from '@ecom/ui';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 

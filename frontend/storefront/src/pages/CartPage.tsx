@@ -2,8 +2,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '@/lib/api';
 import { getSessionId } from '@/lib/session';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Button } from '@ecom/ui';
+import { Card, CardContent, CardFooter } from '@ecom/ui';
 import { formatPrice } from '@/lib/utils';
 import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@ecom/ui';
+import { Button } from '@ecom/ui';
 import { AlertTriangle } from 'lucide-react';
 
 interface Props {

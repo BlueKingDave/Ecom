@@ -6,11 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { api } from '@/lib/api';
 import { getSessionId, clearSession } from '@/lib/session';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Checkbox } from '@ecom/ui';
 import { formatPrice } from '@/lib/utils';
 const shippingSchema = z.object({
     firstName: z.string().min(1, 'First name is required'),
