@@ -1,18 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@ecom/ui';
 import { Package, ShoppingCart, Store, TrendingUp } from 'lucide-react';
+import { DashboardCardSkeleton } from '@/components/DashboardCardSkeleton';
 
 export function DashboardPage() {
-  const { data: productsData } = useQuery({
+  const { data: productsData, isLoading: productsLoading } = useQuery({
     queryKey: ['products'],
     queryFn: () => adminApi.getProducts(1000),
   });
 
-  const { data: ordersData } = useQuery({
+  const { data: ordersData, isLoading: ordersLoading } = useQuery({
     queryKey: ['orders'],
     queryFn: () => adminApi.getOrders(1000),
   });
+
+  const isLoading = productsLoading || ordersLoading;
 
   const stats = [
     {
@@ -49,7 +52,12 @@ export function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat) => (
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, i) => (
+            <DashboardCardSkeleton key={i} />
+          ))
+        ) : (
+          stats.map((stat) => (
           <Card key={stat.title}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
@@ -60,7 +68,8 @@ export function DashboardPage() {
               <p className="text-xs text-muted-foreground">{stat.description}</p>
             </CardContent>
           </Card>
-        ))}
+        ))
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

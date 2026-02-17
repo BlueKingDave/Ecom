@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { api } from '@/lib/api';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@ecom/ui';
-import { Button } from '@ecom/ui';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, Button } from '@ecom/ui';
 import { formatPrice } from '@/lib/utils';
+import { ProductCardSkeleton } from '@/components/ProductCardSkeleton';
 
 export function ProductsPage() {
   const { data, isLoading, error } = useQuery({
@@ -14,7 +14,12 @@ export function ProductsPage() {
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Loading products...</div>
+        <div className="h-10 w-48 bg-muted rounded-md animate-pulse mb-8" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <ProductCardSkeleton key={i} />
+          ))}
+        </div>
       </div>
     );
   }

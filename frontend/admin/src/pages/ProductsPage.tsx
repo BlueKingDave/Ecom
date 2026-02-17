@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, Button } from '@ecom/ui';
 import { formatPrice } from '@/lib/utils';
 import { Plus, Edit, Trash2 } from 'lucide-react';
+import { ProductCardSkeleton } from '@/components/ProductCardSkeleton';
 
 export function ProductsPage() {
   const { data, isLoading } = useQuery({
@@ -24,7 +24,13 @@ export function ProductsPage() {
         </Button>
       </div>
 
-      {isLoading && <div className="text-center py-12">Loading products...</div>}
+      {isLoading && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <ProductCardSkeleton key={i} />
+          ))}
+        </div>
+      )}
 
       {data && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
