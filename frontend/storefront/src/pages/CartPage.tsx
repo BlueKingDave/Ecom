@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { getSessionId } from '@/lib/session';
 import { Button } from '@ecom/ui';
@@ -22,6 +23,10 @@ export function CartPage() {
       api.updateCartItem(productId, quantity, sessionId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
+      toast.success('Cart updated');
+    },
+    onError: () => {
+      toast.error('Failed to update cart. Please try again.');
     },
   });
 
@@ -29,6 +34,10 @@ export function CartPage() {
     mutationFn: (productId: string) => api.removeFromCart(productId, sessionId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
+      toast.success('Item removed from cart');
+    },
+    onError: () => {
+      toast.error('Failed to remove item. Please try again.');
     },
   });
 
@@ -36,6 +45,10 @@ export function CartPage() {
     mutationFn: () => api.clearCart(sessionId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
+      toast.success('Cart cleared');
+    },
+    onError: () => {
+      toast.error('Failed to clear cart. Please try again.');
     },
   });
 

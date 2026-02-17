@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { Button } from '@ecom/ui';
 import { formatPrice } from '@/lib/utils';
@@ -22,7 +23,17 @@ export function ProductDetailPage() {
     mutationFn: (item: any) => api.addToCart(item),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
-      navigate('/cart');
+      toast.success('Added to cart', {
+        description: `${quantity} item(s) added to your cart`,
+        action: {
+          label: 'View Cart',
+          onClick: () => navigate('/cart'),
+        },
+      });
+      setQuantity(1);
+    },
+    onError: () => {
+      toast.error('Failed to add to cart. Please try again.');
     },
   });
 
