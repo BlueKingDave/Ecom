@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';
-import { Card, CardContent, Button } from '@ecom/ui';
+import { Card, CardContent, Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ecom/ui';
 import { formatPrice } from '@/lib/utils';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import { ProductCardSkeleton } from '@/components/ProductCardSkeleton';
@@ -18,10 +18,19 @@ export function ProductsPage() {
           <h1 className="text-4xl font-bold mb-2">Products</h1>
           <p className="text-muted-foreground">Manage your product catalog</p>
         </div>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Product
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button disabled>
+                <Plus className="mr-2 h-4 w-4" />
+                Add Product
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Product creation coming soon</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
       {isLoading && (
@@ -60,24 +69,41 @@ export function ProductsPage() {
                   <div className="flex items-center justify-between">
                     <span className="text-lg font-bold">{formatPrice(product.price)}</span>
                     <div className="flex gap-2">
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        aria-label={`Edit ${product.name}`}
-                        disabled
-                        title="Coming in Phase 2"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        aria-label={`Delete ${product.name}`}
-                        disabled
-                        title="Coming in Phase 2"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              size="icon"
+                              variant="outline"
+                              aria-label={`Edit ${product.name}`}
+                              disabled
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Product editing coming soon</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              size="icon"
+                              variant="outline"
+                              aria-label={`Delete ${product.name}`}
+                              disabled
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Product deletion coming soon</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   </div>
                 </div>

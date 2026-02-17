@@ -7,6 +7,7 @@ export * from './components/label';
 export * from './components/skeleton';
 export * from './components/theme-provider';
 export * from './components/theme-toggle';
+export * from './components/tooltip';
 
 // Utilities
 export { cn } from './lib/utils';

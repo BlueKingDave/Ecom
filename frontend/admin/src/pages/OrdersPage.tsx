@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ecom/ui';
 import { formatPrice } from '@/lib/utils';
 import { Eye, Package } from 'lucide-react';
 
@@ -59,12 +58,41 @@ export function OrdersPage() {
                       </p>
                     </div>
                     <div className="flex gap-2">
-                      <Button size="icon" variant="outline">
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button size="icon" variant="outline">
-                        <Package className="h-4 w-4" />
-                      </Button>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              size="icon"
+                              variant="outline"
+                              disabled
+                              aria-label={`View order ${order.id}`}
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Order details coming soon</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              size="icon"
+                              variant="outline"
+                              disabled
+                              aria-label={`Fulfill order ${order.id}`}
+                            >
+                              <Package className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Order fulfillment coming soon</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   </div>
                 </div>
