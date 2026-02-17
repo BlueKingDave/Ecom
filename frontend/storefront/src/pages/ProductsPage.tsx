@@ -41,12 +41,14 @@ export function ProductsPage() {
                 {product.images[0] ? (
                   <img
                     src={product.images[0]}
-                    alt={product.name}
+                    alt={`${product.name} - ${product.description?.substring(0, 100) || 'Custom printed product'}`}
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                    No image
+                    <span className="sr-only">No product image available</span>
+                    <span aria-hidden="true">No image</span>
                   </div>
                 )}
               </div>

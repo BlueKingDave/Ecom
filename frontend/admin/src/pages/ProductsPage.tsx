@@ -35,12 +35,14 @@ export function ProductsPage() {
                   {product.images[0] ? (
                     <img
                       src={product.images[0]}
-                      alt={product.name}
+                      alt={`${product.name} - ${product.description || 'Product image'}`}
                       className="w-full h-full object-cover"
+                      loading="lazy"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                      No image
+                      <span className="sr-only">No product image available for {product.name}</span>
+                      <span aria-hidden="true">No image</span>
                     </div>
                   )}
                 </div>
@@ -52,10 +54,22 @@ export function ProductsPage() {
                   <div className="flex items-center justify-between">
                     <span className="text-lg font-bold">{formatPrice(product.price)}</span>
                     <div className="flex gap-2">
-                      <Button size="icon" variant="outline">
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        aria-label={`Edit ${product.name}`}
+                        disabled
+                        title="Coming in Phase 2"
+                      >
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button size="icon" variant="outline">
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        aria-label={`Delete ${product.name}`}
+                        disabled
+                        title="Coming in Phase 2"
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>

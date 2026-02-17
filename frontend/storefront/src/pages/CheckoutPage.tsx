@@ -111,76 +111,141 @@ export function CheckoutPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="firstName">First Name *</Label>
-                    <Input id="firstName" {...register('firstName')} />
+                    <Input
+                      id="firstName"
+                      {...register('firstName')}
+                      aria-invalid={!!errors.firstName}
+                      aria-describedby={errors.firstName ? 'firstName-error' : undefined}
+                    />
                     {errors.firstName && (
-                      <p className="text-sm text-destructive mt-1">{errors.firstName.message}</p>
+                      <p id="firstName-error" role="alert" className="text-sm text-destructive mt-1">
+                        {errors.firstName.message}
+                      </p>
                     )}
                   </div>
 
                   <div>
                     <Label htmlFor="lastName">Last Name *</Label>
-                    <Input id="lastName" {...register('lastName')} />
+                    <Input
+                      id="lastName"
+                      {...register('lastName')}
+                      aria-invalid={!!errors.lastName}
+                      aria-describedby={errors.lastName ? 'lastName-error' : undefined}
+                    />
                     {errors.lastName && (
-                      <p className="text-sm text-destructive mt-1">{errors.lastName.message}</p>
+                      <p id="lastName-error" role="alert" className="text-sm text-destructive mt-1">
+                        {errors.lastName.message}
+                      </p>
                     )}
                   </div>
                 </div>
 
                 <div>
                   <Label htmlFor="email">Email *</Label>
-                  <Input id="email" type="email" {...register('email')} />
+                  <Input
+                    id="email"
+                    type="email"
+                    {...register('email')}
+                    aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? 'email-error' : undefined}
+                  />
                   {errors.email && (
-                    <p className="text-sm text-destructive mt-1">{errors.email.message}</p>
+                    <p id="email-error" role="alert" className="text-sm text-destructive mt-1">
+                      {errors.email.message}
+                    </p>
                   )}
                 </div>
 
                 <div>
                   <Label htmlFor="phone">Phone *</Label>
-                  <Input id="phone" type="tel" {...register('phone')} />
+                  <Input
+                    id="phone"
+                    type="tel"
+                    {...register('phone')}
+                    aria-invalid={!!errors.phone}
+                    aria-describedby={errors.phone ? 'phone-error' : undefined}
+                  />
                   {errors.phone && (
-                    <p className="text-sm text-destructive mt-1">{errors.phone.message}</p>
+                    <p id="phone-error" role="alert" className="text-sm text-destructive mt-1">
+                      {errors.phone.message}
+                    </p>
                   )}
                 </div>
 
                 <div>
                   <Label htmlFor="address">Street Address *</Label>
-                  <Input id="address" {...register('address')} />
+                  <Input
+                    id="address"
+                    {...register('address')}
+                    aria-invalid={!!errors.address}
+                    aria-describedby={errors.address ? 'address-error' : undefined}
+                  />
                   {errors.address && (
-                    <p className="text-sm text-destructive mt-1">{errors.address.message}</p>
+                    <p id="address-error" role="alert" className="text-sm text-destructive mt-1">
+                      {errors.address.message}
+                    </p>
                   )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <Label htmlFor="city">City *</Label>
-                    <Input id="city" {...register('city')} />
+                    <Input
+                      id="city"
+                      {...register('city')}
+                      aria-invalid={!!errors.city}
+                      aria-describedby={errors.city ? 'city-error' : undefined}
+                    />
                     {errors.city && (
-                      <p className="text-sm text-destructive mt-1">{errors.city.message}</p>
+                      <p id="city-error" role="alert" className="text-sm text-destructive mt-1">
+                        {errors.city.message}
+                      </p>
                     )}
                   </div>
 
                   <div>
                     <Label htmlFor="state">State *</Label>
-                    <Input id="state" {...register('state')} />
+                    <Input
+                      id="state"
+                      {...register('state')}
+                      aria-invalid={!!errors.state}
+                      aria-describedby={errors.state ? 'state-error' : undefined}
+                    />
                     {errors.state && (
-                      <p className="text-sm text-destructive mt-1">{errors.state.message}</p>
+                      <p id="state-error" role="alert" className="text-sm text-destructive mt-1">
+                        {errors.state.message}
+                      </p>
                     )}
                   </div>
 
                   <div>
                     <Label htmlFor="postalCode">Postal Code *</Label>
-                    <Input id="postalCode" {...register('postalCode')} />
+                    <Input
+                      id="postalCode"
+                      {...register('postalCode')}
+                      aria-invalid={!!errors.postalCode}
+                      aria-describedby={errors.postalCode ? 'postalCode-error' : undefined}
+                    />
                     {errors.postalCode && (
-                      <p className="text-sm text-destructive mt-1">{errors.postalCode.message}</p>
+                      <p id="postalCode-error" role="alert" className="text-sm text-destructive mt-1">
+                        {errors.postalCode.message}
+                      </p>
                     )}
                   </div>
                 </div>
 
                 <div>
                   <Label htmlFor="country">Country *</Label>
-                  <Input id="country" {...register('country')} />
+                  <Input
+                    id="country"
+                    {...register('country')}
+                    aria-invalid={!!errors.country}
+                    aria-describedby={errors.country ? 'country-error' : undefined}
+                  />
                   {errors.country && (
-                    <p className="text-sm text-destructive mt-1">{errors.country.message}</p>
+                    <p id="country-error" role="alert" className="text-sm text-destructive mt-1">
+                      {errors.country.message}
+                    </p>
                   )}
                 </div>
               </CardContent>

@@ -92,12 +92,14 @@ export function CartPage() {
                     {item.image ? (
                       <img
                         src={item.image}
-                        alt={item.name}
+                        alt={`${item.name} product image`}
                         className="w-full h-full object-cover"
+                        loading="lazy"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
-                        No image
+                        <span className="sr-only">No product image available for {item.name}</span>
+                        <span aria-hidden="true">No image</span>
                       </div>
                     )}
                   </div>
@@ -121,10 +123,13 @@ export function CartPage() {
                             })
                           }
                           disabled={item.quantity <= 1 || updateItemMutation.isPending}
+                          aria-label={`Decrease quantity of ${item.name}`}
                         >
                           <Minus className="h-4 w-4" />
                         </Button>
-                        <span className="w-8 text-center font-medium">{item.quantity}</span>
+                        <span className="w-8 text-center font-medium" aria-label={`Quantity: ${item.quantity}`}>
+                          {item.quantity}
+                        </span>
                         <Button
                           variant="outline"
                           size="icon"
@@ -136,6 +141,7 @@ export function CartPage() {
                             })
                           }
                           disabled={updateItemMutation.isPending}
+                          aria-label={`Increase quantity of ${item.name}`}
                         >
                           <Plus className="h-4 w-4" />
                         </Button>
@@ -147,6 +153,7 @@ export function CartPage() {
                         size="sm"
                         onClick={() => removeItemMutation.mutate(item.productId)}
                         disabled={removeItemMutation.isPending}
+                        aria-label={`Remove ${item.name} from cart`}
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Remove

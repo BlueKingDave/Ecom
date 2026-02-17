@@ -24,6 +24,14 @@ export function Layout() {
 
   return (
     <div className="min-h-screen flex">
+      {/* Skip Navigation Link */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md"
+      >
+        Skip to main content
+      </a>
+
       {/* Overlay for mobile */}
       {sidebarOpen && (
         <div
@@ -94,7 +102,7 @@ export function Layout() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto" id="main-content">
           <div className="container mx-auto py-8 px-4">
             <Outlet />
           </div>

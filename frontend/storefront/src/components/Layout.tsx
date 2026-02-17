@@ -15,6 +15,14 @@ export function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Skip Navigation Link */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md"
+      >
+        Skip to main content
+      </a>
+
       {/* Header */}
       <header className="border-b">
         <div className="container mx-auto px-4 py-4">
@@ -67,6 +75,11 @@ export function Layout() {
                   )}
                 </Button>
               </Link>
+
+              {/* Live region for cart updates (screen readers) */}
+              <div className="sr-only" aria-live="polite" aria-atomic="true">
+                {cart && `Shopping cart: ${cart.itemCount} ${cart.itemCount === 1 ? 'item' : 'items'}`}
+              </div>
             </div>
           </div>
 
@@ -95,7 +108,7 @@ export function Layout() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1">
+      <main className="flex-1" id="main-content">
         <Outlet />
       </main>
 
