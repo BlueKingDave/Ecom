@@ -10,6 +10,7 @@ const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage').then(m 
 const CartPage = lazy(() => import('./pages/CartPage').then(m => ({ default: m.CartPage })));
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage').then(m => ({ default: m.CheckoutPage })));
 const OrderConfirmationPage = lazy(() => import('./pages/OrderConfirmationPage').then(m => ({ default: m.OrderConfirmationPage })));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 
 // Loading fallback component
 function PageLoader() {
@@ -35,6 +36,7 @@ function App() {
           <Route path="cart" element={<CartPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
           <Route path="order-confirmation/:orderId" element={<OrderConfirmationPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </Suspense>

@@ -9,6 +9,7 @@ const ProductsPage = lazy(() => import('./pages/ProductsPage').then(m => ({ defa
 const OrdersPage = lazy(() => import('./pages/OrdersPage').then(m => ({ default: m.OrdersPage })));
 const TenantsPage = lazy(() => import('./pages/TenantsPage').then(m => ({ default: m.TenantsPage })));
 const PluginsPage = lazy(() => import('./pages/PluginsPage').then(m => ({ default: m.PluginsPage })));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 
 // Loading fallback component
 function PageLoader() {
@@ -34,6 +35,7 @@ function App() {
           <Route path="orders" element={<OrdersPage />} />
           <Route path="tenants" element={<TenantsPage />} />
           <Route path="plugins" element={<PluginsPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </Suspense>
