@@ -16,6 +16,13 @@ build/
 .next/
 out/
 
+# Frontend build artifacts (prevent compiled files in src)
+frontend/*/src/**/*.js
+frontend/*/src/**/*.js.map
+!frontend/*/src/**/*.config.js
+.vite/
+.turbo/
+
 # Logs
 *.log
 npm-debug.log*
