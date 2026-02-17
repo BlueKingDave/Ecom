@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Menu, X } from 'lucide-react';
 import { Button } from './ui/button';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 
 export function Layout() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const { data: cart } = useQuery({
     queryKey: ['cart'],
     queryFn: () => api.getCart(),
@@ -20,6 +23,7 @@ export function Layout() {
               Ecommerce Store
             </Link>
 
+            {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-6">
               <Link to="/" className="text-sm font-medium hover:text-primary">
                 Home
@@ -30,11 +34,34 @@ export function Layout() {
             </nav>
 
             <div className="flex items-center gap-4">
+              {/* Mobile Menu Button */}
+              <button
+                className="md:hidden p-2 hover:bg-accent rounded-md transition-colors"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle menu"
+                aria-expanded={mobileMenuOpen}
+              >
+                {mobileMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
+              </button>
+
+              {/* Cart Button */}
               <Link to="/cart">
-                <Button variant="outline" size="icon" className="relative">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="relative"
+                  aria-label={`Shopping cart with ${cart?.itemCount || 0} items`}
+                >
                   <ShoppingCart className="h-5 w-5" />
                   {cart && cart.itemCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                    <span
+                      className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full w-5 h-5 text-xs flex items-center justify-center"
+                      aria-hidden="true"
+                    >
                       {cart.itemCount}
                     </span>
                   )}
@@ -42,6 +69,28 @@ export function Layout() {
               </Link>
             </div>
           </div>
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <nav className="md:hidden mt-4 pb-4 border-t pt-4">
+              <div className="flex flex-col gap-4">
+                <Link
+                  to="/"
+                  className="text-sm font-medium hover:text-primary py-2 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/products"
+                  className="text-sm font-medium hover:text-primary py-2 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Products
+                </Link>
+              </div>
+            </nav>
+          )}
         </div>
       </header>
 
@@ -81,7 +130,7 @@ export function Layout() {
             </div>
           </div>
           <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-            © 2024 Ecommerce Store. All rights reserved.
+            © {new Date().getFullYear()} Ecommerce Store. All rights reserved.
           </div>
         </div>
       </footer>
