@@ -14,6 +14,7 @@ import { orderRoutes } from '../api/http/routes/orders.routes';
 import { pluginRoutes } from '../api/http/routes/providers.routes';
 import { assetRoutes } from '../api/http/routes/assets.routes';
 import { webhookRoutes } from '../api/http/routes/webhooks.routes';
+import { campaignRoutes } from '../api/http/routes/campaigns.routes';
 import { pluginRegistry } from '../modules/integrations/providers/infra/registry/ProviderRegistry';
 import { db } from '../shared/infra/db';
 import { tenants as tenantsTable } from '../shared/infra/db/schema';
@@ -141,6 +142,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(pluginRoutes, { prefix: '/api/plugins' });
   await app.register(assetRoutes, { prefix: '/api/assets' });
   await app.register(webhookRoutes, { prefix: '/api/webhooks' });
+  await app.register(campaignRoutes, { prefix: '/api/campaigns' });
 
   // Error handler
   app.setErrorHandler((error, request, reply) => {
