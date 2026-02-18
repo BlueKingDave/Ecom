@@ -1,9 +1,12 @@
 import { FastifyPluginAsync } from 'fastify';
 import { pluginRegistry } from '../plugins/plugin-registry';
 import { PluginService } from '../services/plugin.service';
+import { CatalogService } from '../services/catalog.service';
+import type { FulfillmentPlugin } from '../plugins/interfaces';
 import { z } from 'zod';
 
 const pluginService = new PluginService();
+const catalogService = new CatalogService();
 
 const configurePluginSchema = z.object({
   config: z.record(z.unknown()),
@@ -130,6 +133,77 @@ export const pluginRoutes: FastifyPluginAsync = async (fastify) => {
       const pluginConfig = await pluginService.enablePlugin(request.tenant.id, pluginId);
 
       return pluginConfig;
+    }
+  );
+
+  // Plugin health check
+  fastify.get(
+    '/:pluginId/health',
+    {
+      schema: {
+        tags: ['plugins'],
+        description: 'Check plugin health',
+        security: [{ bearerAuth: [] }],
+      },
+      preHandler: async (request) => {
+        await request.jwtVerify();
+      },
+    },
+    async (request) => {
+      if (!request.tenant) {
+        throw new Error('Tenant not found');
+      }
+
+      const { pluginId } = request.params as { pluginId: string };
+
+      try {
+        const instance = await pluginService.getPluginInstance(request.tenant.id, pluginId);
+        const result = await instance.healthCheck();
+        return result;
+      } catch (error) {
+        return {
+          status: 'error' as const,
+          message: error instanceof Error ? error.message : 'Unknown error',
+        };
+      }
+    }
+  );
+
+  // Sync catalog from plugin
+  fastify.post(
+    '/:pluginId/sync-catalog',
+    {
+      schema: {
+        tags: ['plugins'],
+        description: 'Sync product catalog from plugin',
+        security: [{ bearerAuth: [] }],
+      },
+      preHandler: async (request) => {
+        await request.jwtVerify();
+      },
+    },
+    async (request, reply) => {
+      if (!request.tenant) {
+        throw new Error('Tenant not found');
+      }
+
+      const { pluginId } = request.params as { pluginId: string };
+      const instance = await pluginService.getPluginInstance(request.tenant.id, pluginId) as FulfillmentPlugin;
+
+      if (typeof instance.syncCatalog !== 'function' && typeof instance.syncProducts !== 'function') {
+        return reply.status(400).send({
+          error: 'Bad Request',
+          message: 'Plugin does not support catalog sync',
+        });
+      }
+
+      const result = await catalogService.syncFromPluginInstance(
+        request.tenant.id,
+        pluginId,
+        instance
+      );
+
+      return result;
     }
   );
 

@@ -45,11 +45,33 @@ export interface Order {
   createdAt: string;
 }
 
+export type PluginCapability =
+  | 'catalog.sync' | 'inventory.update' | 'price.update'
+  | 'order.create' | 'order.status' | 'order.cancel' | 'webhook.inbound';
+
+export interface ConfigField {
+  type: 'string' | 'number' | 'boolean' | 'json';
+  required: boolean;
+  encrypted?: boolean;
+  description?: string;
+  default?: unknown;
+}
+
 export interface Plugin {
-  id: string;
-  name: string;
+  id: string;          // pluginConfig UUID
+  pluginId: string;    // 'printify-fulfillment'
+  tenantId: string;
   enabled: boolean;
   config?: Record<string, unknown>;
+  manifest?: {
+    id: string;
+    name: string;
+    version: string;
+    type: string;
+    description?: string;
+    capabilities?: PluginCapability[];
+    config: Record<string, ConfigField>;
+  };
 }
 
 class AdminApiClient {
@@ -143,19 +165,33 @@ class AdminApiClient {
     return this.request('/plugins');
   }
 
+  async getTenantPlugins(): Promise<{ plugins: Plugin[] }> {
+    return this.request('/plugins/tenant');
+  }
+
   async getPlugin(id: string): Promise<Plugin> {
     return this.request(`/plugins/${id}`);
   }
 
-  async updatePluginConfig(id: string, config: Record<string, unknown>): Promise<Plugin> {
-    return this.request(`/plugins/${id}/config`, {
-      method: 'PATCH',
+  async updatePluginConfig(pluginId: string, config: Record<string, unknown>): Promise<Plugin> {
+    return this.request(`/plugins/${pluginId}/configure`, {
+      method: 'POST',
       body: JSON.stringify({ config }),
     });
   }
 
-  async togglePlugin(id: string, enabled: boolean): Promise<Plugin> {
-    return this.request(`/plugins/${id}/${enabled ? 'enable' : 'disable'}`, {
+  async togglePlugin(pluginId: string, enabled: boolean): Promise<Plugin> {
+    return this.request(`/plugins/${pluginId}/${enabled ? 'enable' : 'disable'}`, {
+      method: 'POST',
+    });
+  }
+
+  async getPluginHealth(pluginId: string): Promise<{ status: 'ok' | 'error'; message?: string }> {
+    return this.request(`/plugins/${pluginId}/health`);
+  }
+
+  async syncCatalog(pluginId: string): Promise<{ synced: number }> {
+    return this.request(`/plugins/${pluginId}/sync-catalog`, {
       method: 'POST',
     });
   }

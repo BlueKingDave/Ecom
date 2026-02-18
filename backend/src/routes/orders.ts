@@ -1,7 +1,10 @@
 import { FastifyPluginAsync } from 'fastify';
 import { OrderService, createOrderSchema } from '../services/order.service';
+import { PluginService } from '../services/plugin.service';
+import type { FulfillmentPlugin, Order as PluginOrder } from '../plugins/interfaces';
 
 const orderService = new OrderService();
+const pluginService = new PluginService();
 
 export const orderRoutes: FastifyPluginAsync = async (fastify) => {
   // Get all orders (authenticated users only)
@@ -107,6 +110,52 @@ export const orderRoutes: FastifyPluginAsync = async (fastify) => {
 
       const order = await orderService.createOrder(request.tenant.id, data);
 
+      // Best-effort: dispatch to active fulfillment plugin
+      try {
+        const tenantPlugins = await pluginService.getTenantPlugins(request.tenant.id);
+        const activePlugin = tenantPlugins.find((p) => p.enabled);
+
+        if (activePlugin) {
+          const instance = await pluginService.getPluginInstance(
+            request.tenant.id,
+            activePlugin.pluginId
+          ) as FulfillmentPlugin;
+
+          const shippingAddr = order.shippingAddress as Record<string, string> | null;
+          const pluginOrder: PluginOrder = {
+            id: order.id,
+            items: (order.items as Array<{ productId: string; externalId?: string; variantId?: string; quantity: number; price: string }>).map((item) => ({
+              productId: item.productId,
+              externalId: item.externalId,
+              variantId: item.variantId,
+              quantity: item.quantity,
+              price: item.price,
+            })),
+            shippingAddress: {
+              firstName: shippingAddr?.firstName || '',
+              lastName: shippingAddr?.lastName || '',
+              address1: shippingAddr?.address1 || '',
+              address2: shippingAddr?.address2,
+              city: shippingAddr?.city || '',
+              state: shippingAddr?.state || '',
+              postalCode: shippingAddr?.postalCode || '',
+              country: shippingAddr?.country || 'US',
+              phone: shippingAddr?.phone,
+            },
+            customer: {
+              email: shippingAddr?.email || '',
+              firstName: shippingAddr?.firstName,
+              lastName: shippingAddr?.lastName,
+            },
+          };
+
+          const externalId = await instance.createOrder(pluginOrder);
+          await orderService.updateExternalId(request.tenant.id, order.id, externalId, activePlugin.pluginId);
+        }
+      } catch (pluginError) {
+        request.log.warn({ error: pluginError }, 'Plugin order dispatch failed (non-fatal)');
+      }
+
       return order;
     }
   );
@@ -148,6 +197,19 @@ export const orderRoutes: FastifyPluginAsync = async (fastify) => {
       }
 
       const cancelledOrder = await orderService.cancelOrder(request.tenant.id, id);
+
+      // Best-effort: cancel with fulfillment plugin
+      if (order.externalId && order.pluginId) {
+        try {
+          const instance = await pluginService.getPluginInstance(
+            request.tenant.id,
+            order.pluginId
+          ) as FulfillmentPlugin;
+          await instance.cancelOrder(order.externalId);
+        } catch (pluginError) {
+          request.log.warn({ error: pluginError }, 'Plugin order cancel failed (non-fatal)');
+        }
+      }
 
       return cancelledOrder;
     }

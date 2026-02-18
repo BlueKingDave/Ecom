@@ -13,6 +13,7 @@ import { cartRoutes } from './routes/cart';
 import { orderRoutes } from './routes/orders';
 import { pluginRoutes } from './routes/plugins';
 import { assetRoutes } from './routes/assets';
+import { webhookRoutes } from './routes/webhooks';
 import { pluginRegistry } from './plugins/plugin-registry';
 import { db } from './db';
 import { tenants as tenantsTable } from './db/schema';
@@ -139,6 +140,7 @@ async function start() {
     await app.register(orderRoutes, { prefix: '/api/orders' });
     await app.register(pluginRoutes, { prefix: '/api/plugins' });
     await app.register(assetRoutes, { prefix: '/api/assets' });
+    await app.register(webhookRoutes, { prefix: '/api/webhooks' });
 
     // Error handler
     app.setErrorHandler((error, request, reply) => {

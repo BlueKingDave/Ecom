@@ -53,12 +53,12 @@ describe('PrintifyFulfillmentPlugin - RED Tests', () => {
   });
 
   describe('Health Check', () => {
-    it('should return false when not initialized', async () => {
-      const isHealthy = await plugin.healthCheck();
-      expect(isHealthy).toBe(false);
+    it('should return error status when not initialized', async () => {
+      const result = await plugin.healthCheck();
+      expect(result.status).toBe('error');
     });
 
-    it('should return true when API is accessible', async () => {
+    it('should return ok status when API is accessible', async () => {
       await plugin.initialize({
         apiToken: 'token_123',
         shopId: 'shop_123',
@@ -69,8 +69,8 @@ describe('PrintifyFulfillmentPlugin - RED Tests', () => {
         json: async () => ([]),
       });
 
-      const isHealthy = await plugin.healthCheck();
-      expect(isHealthy).toBe(true);
+      const result = await plugin.healthCheck();
+      expect(result.status).toBe('ok');
       expect(mockFetch).toHaveBeenCalledWith(
         'https://api.printify.com/v1/shops.json',
         expect.objectContaining({
@@ -82,7 +82,7 @@ describe('PrintifyFulfillmentPlugin - RED Tests', () => {
       );
     });
 
-    it('should return false when API call fails', async () => {
+    it('should return error status when API call fails', async () => {
       await plugin.initialize({
         apiToken: 'token_123',
         shopId: 'shop_123',
@@ -90,8 +90,9 @@ describe('PrintifyFulfillmentPlugin - RED Tests', () => {
 
       mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
-      const isHealthy = await plugin.healthCheck();
-      expect(isHealthy).toBe(false);
+      const result = await plugin.healthCheck();
+      expect(result.status).toBe('error');
+      expect(result.message).toContain('Network error');
     });
   });
 

@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, text, timestamp, boolean, decimal, jsonb, index, unique } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, text, timestamp, boolean, decimal, jsonb, integer, index, unique } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 // Tenants (Storefronts)
@@ -44,6 +44,7 @@ export const products = pgTable('products', {
   compareAtPrice: decimal('compare_at_price', { precision: 10, scale: 2 }),
   images: jsonb('images').default([]),
   metadata: jsonb('metadata').default({}),
+  inventoryCount: integer('inventory_count'),
   isActive: boolean('is_active').default(true),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
@@ -67,6 +68,8 @@ export const orders = pgTable('orders', {
   items: jsonb('items').notNull(),
   shippingAddress: jsonb('shipping_address'),
   billingAddress: jsonb('billing_address'),
+  trackingNumber: varchar('tracking_number', { length: 255 }),
+  carrierCode: varchar('carrier_code', { length: 50 }),
   metadata: jsonb('metadata').default({}),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),

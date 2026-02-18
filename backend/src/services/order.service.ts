@@ -162,4 +162,40 @@ export class OrderService {
   async cancelOrder(tenantId: string, orderId: string) {
     return this.updateOrderStatus(tenantId, orderId, 'cancelled');
   }
+
+  /**
+   * Get an order by external provider ID
+   */
+  async getOrderByExternalId(tenantId: string, externalId: string) {
+    const [order] = await db
+      .select()
+      .from(orders)
+      .where(and(eq(orders.tenantId, tenantId), eq(orders.externalId, externalId)))
+      .limit(1);
+
+    return order;
+  }
+
+  /**
+   * Update tracking info from fulfillment provider
+   */
+  async updateTrackingInfo(
+    tenantId: string,
+    orderId: string,
+    trackingNumber: string,
+    carrierCode?: string
+  ) {
+    const [order] = await db
+      .update(orders)
+      .set({
+        trackingNumber,
+        carrierCode: carrierCode || null,
+        status: 'completed',
+        updatedAt: new Date(),
+      })
+      .where(and(eq(orders.id, orderId), eq(orders.tenantId, tenantId)))
+      .returning();
+
+    return order;
+  }
 }

@@ -3,6 +3,10 @@
  * Standard interfaces that all plugins must implement
  */
 
+export type PluginCapability =
+  | 'catalog.sync' | 'inventory.update' | 'price.update'
+  | 'order.create' | 'order.status' | 'order.cancel' | 'webhook.inbound';
+
 export interface PluginManifest {
   id: string;
   name: string;
@@ -12,6 +16,7 @@ export interface PluginManifest {
   author?: string;
   main: string; // Entry point file
   config: Record<string, ConfigField>;
+  capabilities?: PluginCapability[];
   events?: {
     subscribes?: string[];
     publishes?: string[];
@@ -44,7 +49,7 @@ export interface BasePlugin {
   /**
    * Handle webhooks from external service
    */
-  handleWebhook?(payload: unknown): Promise<void>;
+  handleWebhook?(payload: unknown, signature?: string): Promise<WebhookResult>;
 }
 
 /**
@@ -52,7 +57,12 @@ export interface BasePlugin {
  */
 export interface FulfillmentPlugin extends BasePlugin {
   /**
-   * Sync product catalog from provider
+   * Sync product catalog from provider (canonical name)
+   */
+  syncCatalog(): Promise<Product[]>;
+
+  /**
+   * Sync product catalog from provider (alias for syncCatalog)
    */
   syncProducts(): Promise<Product[]>;
 
@@ -75,6 +85,16 @@ export interface FulfillmentPlugin extends BasePlugin {
    * Cancel order with provider
    */
   cancelOrder(externalId: string): Promise<void>;
+
+  /**
+   * Update inventory for a product variant
+   */
+  updateInventory?(externalId: string, qty: number): Promise<void>;
+
+  /**
+   * Update price for a product variant
+   */
+  updatePrice?(externalId: string, price: string): Promise<void>;
 }
 
 /**
@@ -157,6 +177,7 @@ export interface Order {
   items: Array<{
     productId: string;
     externalId?: string;
+    variantId?: string;
     quantity: number;
     price: string;
   }>;
@@ -242,4 +263,12 @@ export interface Metrics {
   cpc: number; // Cost per click
   cpa: number; // Cost per acquisition
   roas: number; // Return on ad spend
+}
+
+export interface WebhookResult {
+  processed: boolean;
+  event?: string;           // 'order.shipped' | 'order.cancelled'
+  orderId?: string;         // External provider order ID
+  trackingNumber?: string;
+  carrierCode?: string;
 }

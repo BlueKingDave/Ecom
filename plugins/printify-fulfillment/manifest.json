@@ -30,10 +30,10 @@
     "publishes": ["fulfillment.status_changed", "product.synced"]
   },
   "capabilities": [
-    "product.sync",
+    "catalog.sync",
     "order.create",
     "order.status",
     "order.cancel",
-    "webhook.handle"
+    "webhook.inbound"
   ]
 }

@@ -27,8 +27,12 @@ const tenantPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.decorateRequest('tenant', null);
 
   fastify.addHook('onRequest', async (request, reply) => {
-    // Skip tenant resolution for health checks and docs
-    if (request.url.startsWith('/health') || request.url.startsWith('/docs')) {
+    // Skip tenant resolution for health checks, docs, and inbound webhooks
+    if (
+      request.url.startsWith('/health') ||
+      request.url.startsWith('/docs') ||
+      request.url.startsWith('/api/webhooks')
+    ) {
       return;
     }
 

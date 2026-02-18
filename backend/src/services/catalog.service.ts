@@ -2,6 +2,7 @@ import { db } from '../db';
 import { products } from '../db/schema';
 import { eq, and, desc } from 'drizzle-orm';
 import { z } from 'zod';
+import type { FulfillmentPlugin } from '../plugins/interfaces';
 
 export const createProductSchema = z.object({
   name: z.string().min(1).max(255),
@@ -118,6 +119,12 @@ export class CatalogService {
         )
         .limit(1);
 
+      // Extract inventoryCount from metadata if present
+      const inventoryCount =
+        typeof extProduct.metadata?.inventoryCount === 'number'
+          ? extProduct.metadata.inventoryCount
+          : null;
+
       if (existing) {
         // Update existing
         const [updated] = await db
@@ -128,6 +135,7 @@ export class CatalogService {
             price: extProduct.price,
             images: extProduct.images,
             metadata: extProduct.metadata,
+            ...(inventoryCount !== null ? { inventoryCount } : {}),
             updatedAt: new Date(),
           })
           .where(eq(products.id, existing.id))
@@ -147,6 +155,7 @@ export class CatalogService {
             price: extProduct.price,
             images: extProduct.images || [],
             metadata: extProduct.metadata || {},
+            ...(inventoryCount !== null ? { inventoryCount } : {}),
           })
           .returning();
 
@@ -155,5 +164,24 @@ export class CatalogService {
     }
 
     return results;
+  }
+
+  /**
+   * Orchestrate catalog sync from a plugin instance
+   */
+  async syncFromPluginInstance(
+    tenantId: string,
+    pluginId: string,
+    plugin: FulfillmentPlugin
+  ): Promise<{ synced: number }> {
+    const syncFn = plugin.syncCatalog || plugin.syncProducts;
+    const externalProducts = await syncFn.call(plugin);
+    // Normalize price: plugin may return number (cents/dollars), we need decimal string
+    const normalized = externalProducts.map((p) => ({
+      ...p,
+      price: String(p.price),
+    }));
+    const results = await this.syncFromPlugin(tenantId, pluginId, normalized);
+    return { synced: results.length };
   }
 }
