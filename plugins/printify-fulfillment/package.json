@@ -1,0 +1,24 @@
+{
+  "name": "@ecom/printify-fulfillment-plugin",
+  "version": "1.0.0",
+  "description": "Printify print-on-demand fulfillment plugin for Ecom Platform",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@vitest/ui": "^4.0.18",
+    "typescript": "^5.3.3",
+    "vitest": "^4.0.18"
+  }
+}

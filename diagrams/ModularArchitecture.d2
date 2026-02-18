@@ -1,0 +1,766 @@
+direction: right
+
+vars: {
+  d2-config: {
+    layout-engine: dagre
+    theme-id: 200
+  }
+}
+
+# ============================================================================
+# STYLING
+# ============================================================================
+classes: {
+  user: {
+    shape: person
+    style: {
+      fill: "#E8F4F8"
+      stroke: "#1168bd"
+      stroke-width: 3
+      font-color: "#1168bd"
+      font-size: 18
+      bold: true
+    }
+  }
+
+  frontend: {
+    shape: rectangle
+    style: {
+      fill: "#4FC3F7"
+      stroke: "#0288D1"
+      stroke-width: 2
+      font-color: white
+      border-radius: 8
+      font-size: 16
+      bold: true
+    }
+  }
+
+  admin: {
+    shape: rectangle
+    style: {
+      fill: "#FF6F00"
+      stroke: "#E65100"
+      stroke-width: 2
+      font-color: white
+      border-radius: 8
+      font-size: 16
+      bold: true
+    }
+  }
+
+  gateway: {
+    shape: rectangle
+    style: {
+      fill: "#1168bd"
+      stroke: "#0b4d8c"
+      stroke-width: 2
+      font-color: white
+      border-radius: 8
+      font-size: 16
+      bold: true
+    }
+  }
+
+  core_service: {
+    shape: rectangle
+    style: {
+      fill: "#0b7a9e"
+      stroke: "#085f7a"
+      stroke-width: 2
+      font-color: white
+      border-radius: 8
+      font-size: 14
+    }
+  }
+
+  plugin_system: {
+    shape: rectangle
+    style: {
+      fill: "#7B1FA2"
+      stroke: "#4A148C"
+      stroke-width: 2
+      font-color: white
+      border-radius: 8
+      font-size: 14
+      bold: true
+    }
+  }
+
+  plugin: {
+    shape: rectangle
+    style: {
+      fill: "#9C27B0"
+      stroke: "#7B1FA2"
+      stroke-width: 1
+      font-color: white
+      border-radius: 5
+      font-size: 12
+    }
+  }
+
+  external: {
+    shape: rectangle
+    style: {
+      fill: "#999999"
+      stroke: "#666666"
+      stroke-width: 2
+      font-color: white
+      border-radius: 8
+      font-size: 14
+    }
+  }
+
+  infrastructure: {
+    shape: cylinder
+    style: {
+      fill: "#666666"
+      stroke: "#444444"
+      stroke-width: 2
+      font-color: white
+      font-size: 14
+    }
+  }
+
+  ai_service: {
+    shape: rectangle
+    style: {
+      fill: "#00ACC1"
+      stroke: "#00838F"
+      stroke-width: 2
+      font-color: white
+      border-radius: 8
+      font-size: 14
+      bold: true
+    }
+  }
+
+  event_bus: {
+    shape: rectangle
+    style: {
+      fill: "#FF6B6B"
+      stroke: "#C92A2A"
+      stroke-width: 2
+      font-color: white
+      border-radius: 5
+      font-size: 14
+      bold: true
+    }
+  }
+}
+
+# ============================================================================
+# USERS
+# ============================================================================
+customers: Customers {
+  class: user
+  label: "[Customers]\nBrowse, upload photos,\npurchase products"
+}
+
+operators: Platform Operators {
+  class: user
+  label: "[Operators]\nManage storefronts,\nad campaigns, analytics"
+}
+
+# ============================================================================
+# FRONTEND LAYER
+# ============================================================================
+frontend_layer: Frontend Layer {
+  style: {
+    fill: "#f0f8ff"
+    stroke: "#1168bd"
+    stroke-width: 2
+    stroke-dash: 5
+  }
+
+  storefronts: Multi-Tenant Storefronts {
+    style: {
+      fill: "#e3f2fd"
+      stroke: "#1976D2"
+      stroke-dash: 3
+    }
+
+    storefront_1: "Storefront A\n(store-a.com)" {
+      class: frontend
+      label: "React + Tailwind\nTheme: Modern"
+    }
+
+    storefront_2: "Storefront B\n(store-b.com)" {
+      class: frontend
+      label: "React + Tailwind\nTheme: Vintage"
+    }
+
+    storefront_n: "Storefront N\n(store-n.com)" {
+      class: frontend
+      label: "React + Tailwind\nTheme: Custom"
+    }
+  }
+
+  admin_dashboard: Admin Dashboard {
+    class: admin
+    label: "Unified Control Plane\nReact + Tailwind + Shadcn"
+    tooltip: "Storefront mgmt | Ad campaigns | Analytics | Plugin config"
+  }
+}
+
+# ============================================================================
+# BACKEND LAYER
+# ============================================================================
+backend_layer: Backend Layer (Node.js + TypeScript) {
+  style: {
+    fill: "#f5f5f5"
+    stroke: "#0b7a9e"
+    stroke-width: 2
+    stroke-dash: 5
+  }
+
+  api_gateway: API Gateway {
+    class: gateway
+    label: "Express/Fastify\nAuth | Rate Limit | Tenant Routing"
+    tooltip: "Routes requests to domain services based on tenant"
+  }
+
+  # Core Domain Services
+  core_services: Core Domain Services {
+    style: {
+      fill: "#e0f2f7"
+      stroke: "#0288D1"
+      stroke-dash: 3
+    }
+
+    catalog: Catalog Service {
+      class: core_service
+      tooltip: "Product management, sync with fulfillment plugins"
+    }
+
+    order: Order Service {
+      class: core_service
+      tooltip: "Order lifecycle, fulfillment orchestration"
+    }
+
+    cart: Cart Service {
+      class: core_service
+      tooltip: "Shopping cart, pricing, discounts"
+    }
+
+    user: User Service {
+      class: core_service
+      tooltip: "Auth, profiles, permissions"
+    }
+
+    asset: Asset Service {
+      class: core_service
+      tooltip: "Media management, cloud storage"
+    }
+
+    campaign: Campaign Service {
+      class: core_service
+      tooltip: "Ad campaign orchestration, multi-platform"
+    }
+
+    analytics: Analytics Service {
+      class: core_service
+      tooltip: "Event tracking, reporting, metrics"
+    }
+  }
+
+  # Plugin System - The Heart of Modularity
+  plugin_system: Plugin System {
+    style: {
+      fill: "#f3e5f5"
+      stroke: "#7B1FA2"
+      stroke-width: 2
+      stroke-dash: 3
+    }
+
+    plugin_manager: Plugin Manager {
+      class: plugin_system
+      label: "Plugin Lifecycle\nRegistry | Install | Enable | Configure"
+    }
+
+    # Fulfillment Plugins
+    fulfillment_plugins: Fulfillment Plugins {
+      style: {
+        fill: "#ede7f6"
+        stroke: "#673AB7"
+        stroke-dash: 2
+      }
+
+      printify_plugin: Printify Plugin {
+        class: plugin
+        tooltip: "Product sync | Order creation | Webhooks"
+      }
+
+      aliexpress_plugin: AliExpress Plugin {
+        class: plugin
+        tooltip: "Dropship integration | Order fulfillment"
+      }
+
+      shopify_plugin: Shopify Plugin {
+        class: plugin
+        tooltip: "Inventory sync | Order routing"
+      }
+
+      custom_fulfillment: Custom Provider {
+        class: plugin
+        tooltip: "Your own fulfillment logic"
+      }
+    }
+
+    # Ad Platform Plugins
+    ad_plugins: Ad Platform Plugins {
+      style: {
+        fill: "#fce4ec"
+        stroke: "#C2185B"
+        stroke-dash: 2
+      }
+
+      google_ads: Google Ads Plugin {
+        class: plugin
+        tooltip: "Campaign mgmt | Conversion API"
+      }
+
+      meta_ads: Meta Ads Plugin {
+        class: plugin
+        tooltip: "FB/IG campaigns | CAPI tracking"
+      }
+
+      tiktok_ads: TikTok Ads Plugin {
+        class: plugin
+        tooltip: "TikTok campaigns | Events API"
+      }
+
+      twitter_ads: Twitter/X Ads Plugin {
+        class: plugin
+        tooltip: "Twitter campaigns | Conversion tracking"
+      }
+
+      pinterest_ads: Pinterest Ads Plugin {
+        class: plugin
+        tooltip: "Pinterest campaigns | Tag integration"
+      }
+    }
+
+    # Payment Plugins
+    payment_plugins: Payment Plugins {
+      style: {
+        fill: "#e8f5e9"
+        stroke: "#388E3C"
+        stroke-dash: 2
+      }
+
+      stripe_plugin: Stripe Plugin {
+        class: plugin
+        tooltip: "Payment intents | Webhooks | Refunds"
+      }
+
+      paypal_plugin: PayPal Plugin {
+        class: plugin
+        tooltip: "Express checkout | Subscriptions"
+      }
+    }
+
+    # Analytics Plugins
+    analytics_plugins: Analytics Plugins {
+      style: {
+        fill: "#fff8e1"
+        stroke: "#F57C00"
+        stroke-dash: 2
+      }
+
+      ga4_plugin: GA4 Plugin {
+        class: plugin
+        tooltip: "User tracking | Funnel analysis"
+      }
+
+      mixpanel_plugin: Mixpanel Plugin {
+        class: plugin
+        tooltip: "Product analytics | Cohorts"
+      }
+    }
+  }
+
+  # AI Service
+  ai_service: AI Cartoonification Service {
+    class: ai_service
+    label: "Job Processing | Multi-Variant Gen\nNode.js or Python"
+    tooltip: "Consumes from Event Bus, generates AI variants"
+  }
+
+  # Event Bus
+  event_bus: Event Bus {
+    class: event_bus
+    label: "Redis Streams / Pub/Sub\nDomain Events | Async Jobs"
+    tooltip: "Decoupled pub/sub for plugins and services"
+  }
+}
+
+# ============================================================================
+# DATA LAYER
+# ============================================================================
+data_layer: Data & Storage Layer {
+  style: {
+    fill: "#fafafa"
+    stroke: "#424242"
+    stroke-width: 2
+    stroke-dash: 5
+  }
+
+  postgres: PostgreSQL {
+    class: infrastructure
+    label: "Multi-Tenant Database\nPrisma/Drizzle ORM"
+    tooltip: "Tenants | Users | Products | Orders | Campaigns | Configs"
+  }
+
+  redis: Redis {
+    class: infrastructure
+    label: "Cache + Sessions\nRate Limiting"
+    tooltip: "Product cache | User sessions | Feature flags"
+  }
+
+  cloud_storage: Cloud Storage {
+    class: infrastructure
+    label: "GCS / S3\nUser Uploads | AI Results"
+    tooltip: "Photos | Cartoonified outputs | Product assets"
+  }
+}
+
+# ============================================================================
+# EXTERNAL SERVICES
+# ============================================================================
+external_services: External Services {
+  style: {
+    fill: "#f5f5f5"
+    stroke: "#666666"
+    stroke-width: 2
+    stroke-dash: 5
+  }
+
+  printify: Printify API {
+    class: external
+    tooltip: "Fulfillment SSoT for Printify plugin"
+  }
+
+  aliexpress: AliExpress API {
+    class: external
+    tooltip: "Dropship fulfillment for AliExpress plugin"
+  }
+
+  stripe: Stripe API {
+    class: external
+    tooltip: "Payment processing for Stripe plugin"
+  }
+
+  google_ads_api: Google Ads API {
+    class: external
+    tooltip: "Campaign management for Google Ads plugin"
+  }
+
+  meta_api: Meta Marketing API {
+    class: external
+    tooltip: "FB/IG ad management for Meta plugin"
+  }
+
+  tiktok_api: TikTok Ads API {
+    class: external
+    tooltip: "TikTok campaign management"
+  }
+
+  ai_runtime: AI Runtime {
+    class: external
+    label: "Gemini / Replicate\nStability AI"
+    tooltip: "ML inference for cartoonification"
+  }
+
+  auth_provider: Google OAuth {
+    class: external
+    tooltip: "User authentication"
+  }
+}
+
+# ============================================================================
+# CONNECTIONS - FRONTEND TO GATEWAY
+# ============================================================================
+customers -> frontend_layer.storefronts.storefront_1: Browse, upload, purchase {
+  style.stroke: "#1168bd"
+  style.stroke-width: 2
+}
+
+customers -> frontend_layer.storefronts.storefront_2 {
+  style.stroke: "#1168bd"
+  style.opacity: 0.5
+}
+
+customers -> frontend_layer.storefronts.storefront_n {
+  style.stroke: "#1168bd"
+  style.opacity: 0.5
+}
+
+operators -> frontend_layer.admin_dashboard: Manage platform {
+  style.stroke: "#FF6F00"
+  style.stroke-width: 2
+}
+
+frontend_layer.storefronts.storefront_1 -> backend_layer.api_gateway: API calls (tenant A) {
+  style.stroke: "#0288D1"
+}
+
+frontend_layer.storefronts.storefront_2 -> backend_layer.api_gateway: API calls (tenant B) {
+  style.stroke: "#0288D1"
+  style.opacity: 0.5
+}
+
+frontend_layer.storefronts.storefront_n -> backend_layer.api_gateway: API calls (tenant N) {
+  style.stroke: "#0288D1"
+  style.opacity: 0.5
+}
+
+frontend_layer.admin_dashboard -> backend_layer.api_gateway: Admin API calls {
+  style.stroke: "#FF6F00"
+}
+
+# ============================================================================
+# CONNECTIONS - GATEWAY TO SERVICES
+# ============================================================================
+backend_layer.api_gateway -> backend_layer.core_services.catalog: Route by tenant {
+  style.stroke: "#0b7a9e"
+}
+
+backend_layer.api_gateway -> backend_layer.core_services.order {
+  style.stroke: "#0b7a9e"
+}
+
+backend_layer.api_gateway -> backend_layer.core_services.cart {
+  style.stroke: "#0b7a9e"
+}
+
+backend_layer.api_gateway -> backend_layer.core_services.user {
+  style.stroke: "#0b7a9e"
+}
+
+backend_layer.api_gateway -> backend_layer.core_services.campaign {
+  style.stroke: "#0b7a9e"
+}
+
+# ============================================================================
+# CONNECTIONS - SERVICES TO EVENT BUS (Event-Driven)
+# ============================================================================
+backend_layer.core_services.order -> backend_layer.event_bus: Publish:\norder.created\norder.updated {
+  style.stroke: "#FF6B6B"
+  style.stroke-width: 2
+  label: "Publish events"
+}
+
+backend_layer.core_services.asset -> backend_layer.event_bus: Publish:\nasset.uploaded {
+  style.stroke: "#FF6B6B"
+}
+
+backend_layer.core_services.campaign -> backend_layer.event_bus: Publish:\ncampaign.started {
+  style.stroke: "#FF6B6B"
+}
+
+backend_layer.event_bus -> backend_layer.ai_service: Subscribe:\nasset.uploaded {
+  style.stroke: "#00ACC1"
+  style.stroke-width: 2
+  label: "AI job trigger"
+}
+
+backend_layer.ai_service -> backend_layer.event_bus: Publish:\nai.completed {
+  style.stroke: "#00ACC1"
+}
+
+# ============================================================================
+# CONNECTIONS - PLUGIN SYSTEM
+# ============================================================================
+backend_layer.core_services.order -> backend_layer.plugin_system.plugin_manager: Order events {
+  style.stroke: "#7B1FA2"
+  style.stroke-dash: 3
+}
+
+backend_layer.plugin_system.plugin_manager -> backend_layer.event_bus: Subscribe to events {
+  style.stroke: "#9C27B0"
+  style.stroke-dash: 2
+  label: "Plugin subscriptions"
+}
+
+# Fulfillment plugins listen to orders
+backend_layer.event_bus -> backend_layer.plugin_system.fulfillment_plugins.printify_plugin: order.created {
+  style.stroke: "#9C27B0"
+  style.opacity: 0.7
+}
+
+backend_layer.event_bus -> backend_layer.plugin_system.fulfillment_plugins.aliexpress_plugin: order.created {
+  style.stroke: "#9C27B0"
+  style.opacity: 0.5
+}
+
+# Ad plugins listen to conversions
+backend_layer.event_bus -> backend_layer.plugin_system.ad_plugins.google_ads: order.created (conversion) {
+  style.stroke: "#C2185B"
+  style.opacity: 0.7
+}
+
+backend_layer.event_bus -> backend_layer.plugin_system.ad_plugins.meta_ads: order.created (conversion) {
+  style.stroke: "#C2185B"
+  style.opacity: 0.7
+}
+
+backend_layer.event_bus -> backend_layer.plugin_system.ad_plugins.tiktok_ads: order.created (conversion) {
+  style.stroke: "#C2185B"
+  style.opacity: 0.7
+}
+
+# Payment plugin integration
+backend_layer.core_services.order -> backend_layer.plugin_system.payment_plugins.stripe_plugin: Process payment {
+  style.stroke: "#388E3C"
+}
+
+# Campaign service uses ad plugins
+backend_layer.core_services.campaign -> backend_layer.plugin_system.ad_plugins.google_ads: Create/manage campaigns {
+  style.stroke: "#FF6F00"
+  style.stroke-dash: 3
+}
+
+backend_layer.core_services.campaign -> backend_layer.plugin_system.ad_plugins.meta_ads: Create/manage campaigns {
+  style.stroke: "#FF6F00"
+  style.stroke-dash: 3
+}
+
+backend_layer.core_services.campaign -> backend_layer.plugin_system.ad_plugins.tiktok_ads: Create/manage campaigns {
+  style.stroke: "#FF6F00"
+  style.stroke-dash: 3
+}
+
+# ============================================================================
+# CONNECTIONS - PLUGINS TO EXTERNAL APIS
+# ============================================================================
+backend_layer.plugin_system.fulfillment_plugins.printify_plugin -> external_services.printify: API calls {
+  style.stroke: "#999999"
+  label: "Create orders\nSync products\nWebhooks"
+}
+
+backend_layer.plugin_system.fulfillment_plugins.aliexpress_plugin -> external_services.aliexpress: API calls {
+  style.stroke: "#999999"
+  style.opacity: 0.6
+}
+
+backend_layer.plugin_system.payment_plugins.stripe_plugin -> external_services.stripe: Payment API {
+  style.stroke: "#388E3C"
+}
+
+backend_layer.plugin_system.ad_plugins.google_ads -> external_services.google_ads_api: Campaign API {
+  style.stroke: "#C2185B"
+}
+
+backend_layer.plugin_system.ad_plugins.meta_ads -> external_services.meta_api: Marketing API {
+  style.stroke: "#C2185B"
+}
+
+backend_layer.plugin_system.ad_plugins.tiktok_ads -> external_services.tiktok_api: Ads API {
+  style.stroke: "#C2185B"
+}
+
+backend_layer.ai_service -> external_services.ai_runtime: ML inference {
+  style.stroke: "#00ACC1"
+}
+
+backend_layer.core_services.user -> external_services.auth_provider: OAuth {
+  style.stroke: "#0b7a9e"
+}
+
+# ============================================================================
+# CONNECTIONS - DATA LAYER
+# ============================================================================
+backend_layer.core_services.catalog -> data_layer.postgres: Read/Write {
+  style.stroke: "#424242"
+}
+
+backend_layer.core_services.order -> data_layer.postgres: Read/Write {
+  style.stroke: "#424242"
+}
+
+backend_layer.core_services.user -> data_layer.postgres: Read/Write {
+  style.stroke: "#424242"
+}
+
+backend_layer.core_services.campaign -> data_layer.postgres: Read/Write {
+  style.stroke: "#424242"
+}
+
+backend_layer.core_services.catalog -> data_layer.redis: Cache products {
+  style.stroke: "#C92A2A"
+  style.stroke-dash: 3
+}
+
+backend_layer.core_services.user -> data_layer.redis: Sessions {
+  style.stroke: "#C92A2A"
+  style.stroke-dash: 3
+}
+
+backend_layer.core_services.asset -> data_layer.cloud_storage: Store media {
+  style.stroke: "#424242"
+}
+
+backend_layer.ai_service -> data_layer.cloud_storage: Store AI results {
+  style.stroke: "#00ACC1"
+}
+
+# ============================================================================
+# KEY ARCHITECTURAL PRINCIPLES
+# ============================================================================
+principles: Key Architectural Principles {
+  style: {
+    fill: "#fffef7"
+    stroke: "#FF6F00"
+    stroke-width: 2
+    stroke-dash: 5
+  }
+
+  modularity: |md
+    ## 🔌 Plugin Modularity
+    - Swap fulfillment providers (Printify ↔ AliExpress)
+    - Add/remove ad platforms dynamically
+    - Configure per tenant
+    - Standard interfaces enforce consistency
+  | {
+    shape: rectangle
+    style: {
+      fill: "#fff3e0"
+      stroke: "#FF6F00"
+      font-size: 12
+      border-radius: 5
+    }
+  }
+
+  multi_tenant: |md
+    ## 🏪 Multi-Tenant Architecture
+    - Single backend serves multiple storefronts
+    - Isolated data per tenant (tenant_id on all tables)
+    - Shared plugin infrastructure
+    - Domain mapping & custom branding
+  | {
+    shape: rectangle
+    style: {
+      fill: "#e3f2fd"
+      stroke: "#1976D2"
+      font-size: 12
+      border-radius: 5
+    }
+  }
+
+  event_driven: |md
+    ## 📡 Event-Driven Design
+    - Decoupled communication via Event Bus
+    - Plugins subscribe to domain events
+    - Async processing for AI & integrations
+    - Scalable, resilient architecture
+  | {
+    shape: rectangle
+    style: {
+      fill: "#ffebee"
+      stroke: "#C92A2A"
+      font-size: 12
+      border-radius: 5
+    }
+  }
+}

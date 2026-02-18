@@ -1,0 +1,39 @@
+{
+  "id": "printify-fulfillment",
+  "name": "Printify Fulfillment",
+  "version": "1.0.0",
+  "type": "fulfillment",
+  "main": "./dist/index.js",
+  "author": "Ecom Platform",
+  "description": "Print-on-demand fulfillment via Printify API with automated order processing",
+  "config": {
+    "apiToken": {
+      "type": "string",
+      "required": true,
+      "encrypted": true,
+      "description": "Printify API Token (get from dashboard)"
+    },
+    "shopId": {
+      "type": "string",
+      "required": true,
+      "description": "Your Printify Shop ID"
+    },
+    "autoPublish": {
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "Automatically publish products to shop"
+    }
+  },
+  "events": {
+    "subscribes": ["order.created", "product.sync_requested"],
+    "publishes": ["fulfillment.status_changed", "product.synced"]
+  },
+  "capabilities": [
+    "catalog.sync",
+    "order.create",
+    "order.status",
+    "order.cancel",
+    "webhook.inbound"
+  ]
+}

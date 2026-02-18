@@ -1,0 +1,16 @@
+{
+  "enabledPlugins": {
+    "code-review@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "serena@claude-plugins-official": true,
+    "Notion@claude-plugins-official": true,
+    "hookify@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "stripe@claude-plugins-official": true,
+    "agent-orchestration@claude-code-workflows": true,
+    "api-scaffolding@claude-code-workflows": true
+  }
+}
