@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, Store, Settings, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Store, Settings, Menu, X, Megaphone } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@ecom/ui';
 
@@ -14,6 +14,7 @@ export function Layout() {
     { path: '/orders', label: 'Orders', icon: ShoppingCart },
     { path: '/tenants', label: 'Tenants', icon: Store },
     { path: '/plugins', label: 'Plugins', icon: Settings },
+    { path: '/campaigns', label: 'Campaigns', icon: Megaphone },
   ];
 
   // Close sidebar on navigation (mobile only)
