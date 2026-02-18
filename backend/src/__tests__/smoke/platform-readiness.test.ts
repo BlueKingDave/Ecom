@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { hashPassword, verifyPassword } from '../../utils/password';
-import { encrypt, isEncrypted } from '../../utils/crypto';
+import { hashPassword, verifyPassword } from '../../shared/infra/password';
+import { encrypt, isEncrypted } from '../../shared/infra/crypto';
 import { calculateOrderTotals } from '../setup';
 
 /**

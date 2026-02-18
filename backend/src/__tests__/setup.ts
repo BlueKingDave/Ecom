@@ -1,5 +1,5 @@
 import { beforeAll, afterAll, beforeEach } from 'vitest';
-import { hashPassword } from '../utils/password';
+import { hashPassword } from '../shared/infra/password';
 
 /**
  * Test fixtures - shared test data

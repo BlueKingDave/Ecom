@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { hashPassword, verifyPassword } from '../../utils/password';
-import { encrypt, decrypt, isEncrypted } from '../../utils/crypto';
+import { hashPassword, verifyPassword } from '../../shared/infra/password';
+import { encrypt, decrypt, isEncrypted } from '../../shared/infra/crypto';
 import bcrypt from 'bcrypt';
 
 describe('Security: Authentication & Encryption', () => {
