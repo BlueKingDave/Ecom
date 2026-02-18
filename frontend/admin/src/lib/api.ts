@@ -74,6 +74,33 @@ export interface Plugin {
   };
 }
 
+export type AdPlatform = 'meta' | 'tiktok' | 'google';
+export type CampaignStatus = 'draft' | 'active' | 'paused' | 'completed';
+
+export interface Campaign {
+  id: string;
+  tenantId: string;
+  name: string;
+  platform: AdPlatform;
+  pluginId: string;
+  externalId?: string | null;
+  status: CampaignStatus;
+  budget: string;
+  config: Record<string, unknown>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CampaignMetrics {
+  impressions: number;
+  clicks: number;
+  conversions: number;
+  spend: number;
+  cpc: number;
+  cpa: number;
+  roas: number;
+}
+
 class AdminApiClient {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -194,6 +221,56 @@ class AdminApiClient {
     return this.request(`/plugins/${pluginId}/sync-catalog`, {
       method: 'POST',
     });
+  }
+
+  // Campaigns
+  async getCampaigns(): Promise<{ campaigns: Campaign[] }> {
+    return this.request('/campaigns');
+  }
+
+  async getCampaign(id: string): Promise<Campaign> {
+    return this.request(`/campaigns/${id}`);
+  }
+
+  async createCampaign(data: {
+    name: string;
+    platform: AdPlatform;
+    budget: number;
+    config?: Record<string, unknown>;
+  }): Promise<Campaign> {
+    return this.request('/campaigns', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateCampaign(id: string, data: Partial<Campaign>): Promise<Campaign> {
+    return this.request(`/campaigns/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async activateCampaign(id: string): Promise<Campaign> {
+    return this.request(`/campaigns/${id}/activate`, { method: 'POST' });
+  }
+
+  async pauseCampaign(id: string): Promise<Campaign> {
+    return this.request(`/campaigns/${id}/pause`, { method: 'POST' });
+  }
+
+  async deleteCampaign(id: string): Promise<void> {
+    return this.request(`/campaigns/${id}`, { method: 'DELETE' });
+  }
+
+  async getCampaignMetrics(
+    id: string,
+    params?: { startDate?: string; endDate?: string }
+  ): Promise<CampaignMetrics> {
+    const qs = params
+      ? `?${new URLSearchParams(params as Record<string, string>)}`
+      : '';
+    return this.request(`/campaigns/${id}/metrics${qs}`);
   }
 }
 
