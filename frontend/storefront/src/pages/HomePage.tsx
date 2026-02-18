@@ -1,9 +1,22 @@
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { Button } from '@ecom/ui';
 
 export function HomePage() {
   return (
     <div>
+      <Helmet>
+        <title>Custom Photo Products | Ecommerce Store</title>
+        <meta
+          name="description"
+          content="Transform your photos into custom products with AI cartoonification. Shop t-shirts, mugs, posters and more with your personalized designs."
+        />
+        <meta property="og:title" content="Custom Photo Products | Ecommerce Store" />
+        <meta
+          property="og:description"
+          content="Transform your photos into custom products with AI cartoonification."
+        />
+      </Helmet>
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-primary/10 to-background py-20">
         <div className="container mx-auto px-4">

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { api } from '@/lib/api';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, Button, EmptyState } from '@ecom/ui';
 import { formatPrice } from '@/lib/utils';
@@ -38,6 +39,18 @@ export function ProductsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <Helmet>
+        <title>Products | Ecommerce Store</title>
+        <meta
+          name="description"
+          content="Browse our collection of custom printed products. Upload your photos and create unique t-shirts, mugs, and posters."
+        />
+        <meta property="og:title" content="Products | Ecommerce Store" />
+        <meta
+          property="og:description"
+          content="Browse our collection of custom printed products."
+        />
+      </Helmet>
       <h1 className="text-4xl font-bold mb-8">Our Products</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

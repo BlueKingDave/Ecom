@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { Helmet } from 'react-helmet-async';
 import { adminApi } from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@ecom/ui';
 import { Package, ShoppingCart, Store, TrendingUp } from 'lucide-react';
@@ -46,6 +47,10 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-8">
+      <Helmet>
+        <title>Dashboard | Ecom Admin</title>
+        <meta name="description" content="Ecommerce platform admin dashboard - manage products, orders, and tenants" />
+      </Helmet>
       <div>
         <h1 className="text-4xl font-bold mb-2">Dashboard</h1>
         <p className="text-muted-foreground">Welcome to your admin dashboard</p>

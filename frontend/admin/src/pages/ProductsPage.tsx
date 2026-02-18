@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { Helmet } from 'react-helmet-async';
 import { adminApi } from '@/lib/api';
 import { Card, CardContent, Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, EmptyState } from '@ecom/ui';
 import { formatPrice } from '@/lib/utils';
@@ -13,6 +14,10 @@ export function ProductsPage() {
 
   return (
     <div className="space-y-6">
+      <Helmet>
+        <title>Products | Ecom Admin</title>
+        <meta name="description" content="Manage your product catalog - add, edit, and organize products" />
+      </Helmet>
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-4xl font-bold mb-2">Products</h1>

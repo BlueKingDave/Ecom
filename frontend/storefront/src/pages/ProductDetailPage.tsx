@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { Button, Breadcrumbs } from '@ecom/ui';
@@ -67,6 +68,18 @@ export function ProductDetailPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <Helmet>
+        <title>{product.name} | Ecommerce Store</title>
+        <meta
+          name="description"
+          content={product.description || `Buy ${product.name} - Custom printed product from our store`}
+        />
+        <meta property="og:title" content={`${product.name} | Ecommerce Store`} />
+        <meta
+          property="og:description"
+          content={product.description || `Buy ${product.name}`}
+        />
+      </Helmet>
       <Breadcrumbs
         items={[
           { label: 'Products', href: '/products' },
