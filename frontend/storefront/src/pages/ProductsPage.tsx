@@ -1,11 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { api } from '@/lib/api';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, Button } from '@ecom/ui';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, Button, EmptyState } from '@ecom/ui';
 import { formatPrice } from '@/lib/utils';
 import { ProductCardSkeleton } from '@/components/ProductCardSkeleton';
+import { Package } from 'lucide-react';
 
 export function ProductsPage() {
+  const navigate = useNavigate();
   const { data, isLoading, error } = useQuery({
     queryKey: ['products'],
     queryFn: () => api.getProducts(),
@@ -82,9 +84,13 @@ export function ProductsPage() {
       </div>
 
       {data?.products.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">No products available yet.</p>
-        </div>
+        <EmptyState
+          icon={Package}
+          title="No Products Yet"
+          description="We're currently setting up our catalog. Check back soon for amazing custom products!"
+          actionLabel="Return Home"
+          actionOnClick={() => navigate('/')}
+        />
       )}
     </div>
   );

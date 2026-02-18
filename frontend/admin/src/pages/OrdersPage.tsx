@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';
-import { Card, CardContent, Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ecom/ui';
+import { Card, CardContent, Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, EmptyState } from '@ecom/ui';
 import { formatPrice } from '@/lib/utils';
-import { Eye, Package } from 'lucide-react';
+import { Eye, Package, ShoppingCart } from 'lucide-react';
 
 export function OrdersPage() {
   const { data, isLoading } = useQuery({
@@ -124,9 +124,11 @@ export function OrdersPage() {
       )}
 
       {data?.orders?.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">No orders yet</p>
-        </div>
+        <EmptyState
+          icon={ShoppingCart}
+          title="No Orders Yet"
+          description="When customers place orders, they'll appear here. You'll be able to track, manage, and fulfill all orders from this page."
+        />
       )}
     </div>
   );

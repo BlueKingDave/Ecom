@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';
-import { Card, CardContent, Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ecom/ui';
+import { Card, CardContent, Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, EmptyState } from '@ecom/ui';
 import { formatPrice } from '@/lib/utils';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { Plus, Edit, Trash2, Package } from 'lucide-react';
 import { ProductCardSkeleton } from '@/components/ProductCardSkeleton';
 
 export function ProductsPage() {
@@ -114,9 +114,14 @@ export function ProductsPage() {
       )}
 
       {data?.products?.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">No products yet. Add your first product to get started.</p>
-        </div>
+        <EmptyState
+          icon={Package}
+          title="No Products Yet"
+          description="Start building your product catalog by adding your first product. Products can be customized with AI-generated designs."
+          actionLabel="Add Product"
+          actionOnClick={() => {}}
+          actionDisabled={true}
+        />
       )}
     </div>
   );
