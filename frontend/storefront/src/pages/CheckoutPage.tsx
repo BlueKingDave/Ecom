@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { api, type ShippingAddress } from '@/lib/api';
 import { getSessionId, clearSession } from '@/lib/session';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Checkbox } from '@ecom/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Checkbox, Breadcrumbs } from '@ecom/ui';
 import { formatPrice } from '@/lib/utils';
 
 const shippingSchema = z.object({
@@ -92,6 +92,13 @@ export function CheckoutPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <Breadcrumbs
+        items={[
+          { label: 'Cart', href: '/cart' },
+          { label: 'Checkout' },
+        ]}
+        onNavigate={(href) => navigate(href)}
+      />
       <h1 className="text-4xl font-bold mb-8">Checkout</h1>
 
       <form onSubmit={handleSubmit(onSubmit)}>

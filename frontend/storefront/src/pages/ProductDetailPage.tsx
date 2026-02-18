@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
-import { Button } from '@ecom/ui';
+import { Button, Breadcrumbs } from '@ecom/ui';
 import { formatPrice } from '@/lib/utils';
 import { ShoppingCart } from 'lucide-react';
 
@@ -67,6 +67,13 @@ export function ProductDetailPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <Breadcrumbs
+        items={[
+          { label: 'Products', href: '/products' },
+          { label: product.name },
+        ]}
+        onNavigate={(href) => navigate(href)}
+      />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Product Image */}
         <div className="aspect-square bg-muted rounded-lg overflow-hidden">
