@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { Mocked } from 'vitest';
 import { CampaignService } from '../application/CampaignService';
 import { CampaignRepo } from '../infra/persistence/CampaignRepo';
 import { adChannelRegistry } from '../infra/AdChannelRegistry';
@@ -27,11 +28,11 @@ function makeCampaign(overrides: Record<string, unknown> = {}) {
 
 describe('CampaignService', () => {
   let service: CampaignService;
-  let repo: vi.Mocked<CampaignRepo>;
+  let repo: Mocked<CampaignRepo>;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    repo = new CampaignRepo() as vi.Mocked<CampaignRepo>;
+    repo = new CampaignRepo() as Mocked<CampaignRepo>;
     service = new CampaignService(repo);
   });
 
@@ -90,7 +91,7 @@ describe('CampaignService', () => {
       const result = await service.activate(TENANT, 'camp-1');
 
       expect(repo.update).not.toHaveBeenCalled();
-      expect(result.status).toBe('active');
+      expect(result!.status).toBe('active');
     });
   });
 

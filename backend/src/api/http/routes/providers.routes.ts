@@ -1,11 +1,11 @@
 import { FastifyPluginAsync } from 'fastify';
 import { pluginRegistry } from '../../../modules/integrations/providers/infra/registry/ProviderRegistry';
-import { PluginService } from '../../../modules/integrations/providers/application/ProviderService';
+import { ProviderService } from '../../../modules/integrations/providers/application/ProviderService';
 import { CatalogService } from '../../../modules/catalog/application/CatalogService';
 import type { FulfillmentPlugin } from '../../../modules/integrations/providers/domain/Provider';
 import { z } from 'zod';
 
-const pluginService = new PluginService();
+const pluginService = new ProviderService();
 const catalogService = new CatalogService();
 
 const configurePluginSchema = z.object({

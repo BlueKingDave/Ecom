@@ -2,11 +2,11 @@ import { FastifyPluginAsync } from 'fastify';
 import { db } from '../../../shared/infra/db';
 import { pluginConfigs } from '../../../shared/infra/db/schema';
 import { eq } from 'drizzle-orm';
-import { PluginService } from '../../../modules/integrations/providers/application/ProviderService';
+import { ProviderService } from '../../../modules/integrations/providers/application/ProviderService';
 import { OrderService } from '../../../modules/orders/application/OrderService';
 import type { FulfillmentPlugin } from '../../../modules/integrations/providers/domain/Provider';
 
-const pluginService = new PluginService();
+const pluginService = new ProviderService();
 const orderService = new OrderService();
 
 export const webhookRoutes: FastifyPluginAsync = async (fastify) => {

@@ -4,7 +4,7 @@ import { TikTokAdsAdapter } from './adapters/tiktok/TikTokAdsAdapter';
 import { GoogleAdsAdapter } from './adapters/google/GoogleAdsAdapter';
 
 class AdChannelRegistry {
-  private readonly adapters: Map<AdPlatform, AdChannel> = new Map([
+  private readonly adapters: Map<AdPlatform, AdChannel> = new Map<AdPlatform, AdChannel>([
     ['meta', new MetaAdsAdapter()],
     ['tiktok', new TikTokAdsAdapter()],
     ['google', new GoogleAdsAdapter()],

@@ -199,7 +199,7 @@ export const campaignRoutes: FastifyPluginAsync = async (fastify) => {
       try {
         return await campaignService.getMetrics(request.tenant.id, id, dateRange);
       } catch (err: any) {
-        if (err.statusDate === 404) return reply.status(404).send({ error: 'Not Found', message: err.message });
+        if (err.statusCode === 404) return reply.status(404).send({ error: 'Not Found', message: err.message });
         throw err;
       }
     }

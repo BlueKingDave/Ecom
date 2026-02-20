@@ -6,10 +6,6 @@ export type { CartItem, Cart };
 export class CartService {
   constructor(private repo = new CartRepo()) {}
 
-  private getCartKey(sessionId: string): string {
-    return `cart:${sessionId}`;
-  }
-
   async getCart(sessionId: string): Promise<Cart> {
     try {
       const cart = await this.repo.get(sessionId);

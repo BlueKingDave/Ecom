@@ -1,10 +1,10 @@
 import { FastifyPluginAsync } from 'fastify';
 import { OrderService, createOrderSchema } from '../../../modules/orders/application/OrderService';
-import { PluginService } from '../../../modules/integrations/providers/application/ProviderService';
+import { ProviderService } from '../../../modules/integrations/providers/application/ProviderService';
 import type { FulfillmentPlugin, Order as PluginOrder } from '../../../modules/integrations/providers/domain/Provider';
 
 const orderService = new OrderService();
-const pluginService = new PluginService();
+const pluginService = new ProviderService();
 
 export const orderRoutes: FastifyPluginAsync = async (fastify) => {
   // Get all orders (authenticated users only)

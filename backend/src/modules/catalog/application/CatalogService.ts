@@ -1,5 +1,5 @@
 import { CatalogRepo, createProductSchema, updateProductSchema } from '../infra/CatalogRepo';
-import type { FulfillmentPlugin } from '../../../plugins/interfaces';
+import type { FulfillmentPlugin } from '../../integrations/providers/domain/Provider';
 import { z } from 'zod';
 
 export { createProductSchema, updateProductSchema };
